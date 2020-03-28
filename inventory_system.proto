@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+service InventorySystem{
+    rpc GetProduct (ProductIdentifier) returns (Product){}
+    rpc AddProduct (Product) returns (Success) {}
+    rpc GetProductsByManufacturer (Manufacturer) returns (stream Product){}
+    rpc GetProductsInStock (Empty) returns (stream Product) {}
+    rpc UpdateAmount (ProductAmount) returns (Success) {}
+    rpc UpdateDescription (ProductDescription) returns (Success) {}
+    rpc UpdateManufacturer (ProductManufacturer) returns (Success) {}
+    rpc UpdateWholesaleCost (ProductWholesaleCost) returns (Success){}
+    rpc UpdateSaleCost (ProductSaleCost) returns (success){}
+}
+
+message Empty {
+}
+
+message Success {
+    string success = 1;
+}
+
+message ProductIdentifier {
+    string name = 1;
+    string id = 2;
+}
+
+message ProductAmount{
+    ProductIdentifier product = 1;
+    int64 amount = 2;
+}
+
+message ProductDescription{
+    ProductIdentifier product = 1;
+    string description = 2;
+}
+
+message ProductManufacturer{
+    ProductIdentifier product = 1;
+    string manufacturer = 2;
+}
+
+message ProductSaleCost{
+    ProductIdentifier product = 1;
+    string manufacturer = 2;
+}
+
+message Manufacturer {
+    string manufacturer = 1;
+}
+
+message Product{
+    string name = 1;
+    string id = 2;
+    int64 amount = 3;
+    string desciprtion = 4;
+    string manufacturer = 5;
+    double sale_cost = 6;
+    double wholesale_cost = 7;
+}
