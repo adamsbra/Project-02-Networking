@@ -1,12 +1,11 @@
+from datetime import date
 from xmlrpc.server import SimpleXMLRPCServer
 import pickle
 import uuid
-from datetime import date
 
 
 # assumptions (to maybe be fixed):
 # once a product or manufacturer is created they are never eliminated even if it reaches 0 units, they will just empty
-
 
 class inventory:
     def __init__(self):
@@ -35,7 +34,7 @@ class inventory:
             self.unpaid.append((self.orders.index(new_order)))
 
     def update_manufacturers(self, the_product):
-        index_of_new_object = my_inventory.products.index(the_product)
+        index_of_new_object = self.products.index(the_product)
         if the_product.manufacturer in self.manufacturers.keys():
             self.manufacturers[the_product.manufacturer].append(index_of_new_object)
         else:
@@ -76,10 +75,6 @@ class product:
 products = open("products.txt", "rb")
 my_inventory = pickle.load(products)
 products.close()
-
-# my_inventory = inventory()
-
-print(my_inventory.names)
 
 
 # TODO might want to change products_name_or_id, amounts lists for a dict or a list of tuples
@@ -172,9 +167,9 @@ def get_order(id_):
 
 
 def get_order_summary(order_):
-    summary = str(order_.id_) + " "
-    for i in range(order_.amounts):
-        summary += order_.products_name_or_id[i] + str(order_.amounts[i])
+    summary = "ID: " + str(order_.id_) + " "
+    for i in range(len(order_.amounts)):
+        summary += order_.products_name_or_id[i] + ": " + str(order_.amounts[i]) + " units. "
     return summary
 
 
@@ -247,21 +242,39 @@ def lower_amount(name_or_id, amount):
     return transaction_success
 
 
+def list_unshipped():
+    unshipped = []
+    for i in my_inventory.unshipped:
+        unshipped.append(get_order_summary(my_inventory.orders[i]))
+    return unshipped
+
+
+def list_unpaid():
+    unpaid = []
+    for i in my_inventory.unpaid:
+        unpaid.append(get_order_summary(my_inventory.orders[i]))
+    return unpaid
+
+
 try:
 
     server = SimpleXMLRPCServer(("localhost", 8000))
     print("Listening on port 8000...")
+    server.register_function(add_order, "add_order")
     server.register_function(add_product, "add_product")
-    server.register_function(list_products, "list_products")
-    server.register_function(lookup_product_by_id, "lookup_product_by_id")
-    server.register_function(lookup_product_by_name, "lookup_product_by_name")
-    server.register_function(list_products_by_manufacturer, "list_products_by_manufacturer")
-    server.register_function(increase_amount, "increase_amount")
-    server.register_function(lower_amount, "lower_amount")
+    server.register_function(change_description, "change_description")
     server.register_function(change_manufacturer, "change_manufacturer")
     server.register_function(change_sale_cost, "change_sale_cost")
     server.register_function(change_wholesale_cost, "change_wholesale_cost")
-    server.register_function(add_order, "add_order")
+    server.register_function(increase_amount, "increase_amount")
+    server.register_function(list_products, "list_products")
+    server.register_function(list_products_by_manufacturer, "list_products_by_manufacturer")
+    server.register_function(lookup_order, "lookup_order")
+    server.register_function(lookup_product_by_id, "lookup_product_by_id")
+    server.register_function(lookup_product_by_name, "lookup_product_by_name")
+    server.register_function(lower_amount, "lower_amount")
+    server.register_function(list_unshipped, "list_unshipped")
+    server.register_function(list_unpaid, "list_unpaid")
 
     server.serve_forever()
 except KeyboardInterrupt:

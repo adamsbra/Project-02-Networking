@@ -52,3 +52,10 @@ def test_add_order(products_name_or_id, amounts, destination):
     success = proxy.add_order(products_name_or_id, amounts, destination)
     print(success)
 
+
+def test_list_unshipped():
+    success = proxy.list_unshipped()
+    print(success)
+
+
+test_list_unshipped()
