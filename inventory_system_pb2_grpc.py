@@ -22,7 +22,7 @@ class InventorySystemStub(object):
     self.AddProduct = channel.unary_unary(
         '/InventorySystem/AddProduct',
         request_serializer=inventory__system__pb2.Product.SerializeToString,
-        response_deserializer=inventory__system__pb2.Success.FromString,
+        response_deserializer=inventory__system__pb2.ProductIdentifier.FromString,
         )
     self.GetProductsByManufacturer = channel.unary_stream(
         '/InventorySystem/GetProductsByManufacturer',
@@ -34,9 +34,49 @@ class InventorySystemStub(object):
         request_serializer=inventory__system__pb2.Empty.SerializeToString,
         response_deserializer=inventory__system__pb2.Product.FromString,
         )
-    self.UpdateProduct = channel.unary_unary(
-        '/InventorySystem/UpdateProduct',
-        request_serializer=inventory__system__pb2.Product.SerializeToString,
+    self.DecreaseProductAmount = channel.unary_unary(
+        '/InventorySystem/DecreaseProductAmount',
+        request_serializer=inventory__system__pb2.ProductAmount.SerializeToString,
+        response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.IncreaseProductAmount = channel.unary_unary(
+        '/InventorySystem/IncreaseProductAmount',
+        request_serializer=inventory__system__pb2.ProductAmount.SerializeToString,
+        response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.UpdateProductManufacturer = channel.unary_unary(
+        '/InventorySystem/UpdateProductManufacturer',
+        request_serializer=inventory__system__pb2.ProductManufacturer.SerializeToString,
+        response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.UpdateProductDescription = channel.unary_unary(
+        '/InventorySystem/UpdateProductDescription',
+        request_serializer=inventory__system__pb2.ProductDescription.SerializeToString,
+        response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.UpdateProductSaleCost = channel.unary_unary(
+        '/InventorySystem/UpdateProductSaleCost',
+        request_serializer=inventory__system__pb2.ProductSaleCost.SerializeToString,
+        response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.UpdateProductWholesaleCost = channel.unary_unary(
+        '/InventorySystem/UpdateProductWholesaleCost',
+        request_serializer=inventory__system__pb2.ProductWholesaleCost.SerializeToString,
+        response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.GetOrder = channel.unary_unary(
+        '/InventorySystem/GetOrder',
+        request_serializer=inventory__system__pb2.OrderID.SerializeToString,
+        response_deserializer=inventory__system__pb2.Order.FromString,
+        )
+    self.AddOrder = channel.unary_unary(
+        '/InventorySystem/AddOrder',
+        request_serializer=inventory__system__pb2.Order.SerializeToString,
+        response_deserializer=inventory__system__pb2.OrderID.FromString,
+        )
+    self.UpdateOrder = channel.unary_unary(
+        '/InventorySystem/UpdateOrder',
+        request_serializer=inventory__system__pb2.Order.SerializeToString,
         response_deserializer=inventory__system__pb2.Success.FromString,
         )
 
@@ -73,7 +113,63 @@ class InventorySystemServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def UpdateProduct(self, request, context):
+  def DecreaseProductAmount(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def IncreaseProductAmount(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def UpdateProductManufacturer(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def UpdateProductDescription(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def UpdateProductSaleCost(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def UpdateProductWholesaleCost(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetOrder(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def AddOrder(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def UpdateOrder(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -91,7 +187,7 @@ def add_InventorySystemServicer_to_server(servicer, server):
       'AddProduct': grpc.unary_unary_rpc_method_handler(
           servicer.AddProduct,
           request_deserializer=inventory__system__pb2.Product.FromString,
-          response_serializer=inventory__system__pb2.Success.SerializeToString,
+          response_serializer=inventory__system__pb2.ProductIdentifier.SerializeToString,
       ),
       'GetProductsByManufacturer': grpc.unary_stream_rpc_method_handler(
           servicer.GetProductsByManufacturer,
@@ -103,9 +199,49 @@ def add_InventorySystemServicer_to_server(servicer, server):
           request_deserializer=inventory__system__pb2.Empty.FromString,
           response_serializer=inventory__system__pb2.Product.SerializeToString,
       ),
-      'UpdateProduct': grpc.unary_unary_rpc_method_handler(
-          servicer.UpdateProduct,
-          request_deserializer=inventory__system__pb2.Product.FromString,
+      'DecreaseProductAmount': grpc.unary_unary_rpc_method_handler(
+          servicer.DecreaseProductAmount,
+          request_deserializer=inventory__system__pb2.ProductAmount.FromString,
+          response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'IncreaseProductAmount': grpc.unary_unary_rpc_method_handler(
+          servicer.IncreaseProductAmount,
+          request_deserializer=inventory__system__pb2.ProductAmount.FromString,
+          response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'UpdateProductManufacturer': grpc.unary_unary_rpc_method_handler(
+          servicer.UpdateProductManufacturer,
+          request_deserializer=inventory__system__pb2.ProductManufacturer.FromString,
+          response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'UpdateProductDescription': grpc.unary_unary_rpc_method_handler(
+          servicer.UpdateProductDescription,
+          request_deserializer=inventory__system__pb2.ProductDescription.FromString,
+          response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'UpdateProductSaleCost': grpc.unary_unary_rpc_method_handler(
+          servicer.UpdateProductSaleCost,
+          request_deserializer=inventory__system__pb2.ProductSaleCost.FromString,
+          response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'UpdateProductWholesaleCost': grpc.unary_unary_rpc_method_handler(
+          servicer.UpdateProductWholesaleCost,
+          request_deserializer=inventory__system__pb2.ProductWholesaleCost.FromString,
+          response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'GetOrder': grpc.unary_unary_rpc_method_handler(
+          servicer.GetOrder,
+          request_deserializer=inventory__system__pb2.OrderID.FromString,
+          response_serializer=inventory__system__pb2.Order.SerializeToString,
+      ),
+      'AddOrder': grpc.unary_unary_rpc_method_handler(
+          servicer.AddOrder,
+          request_deserializer=inventory__system__pb2.Order.FromString,
+          response_serializer=inventory__system__pb2.OrderID.SerializeToString,
+      ),
+      'UpdateOrder': grpc.unary_unary_rpc_method_handler(
+          servicer.UpdateOrder,
+          request_deserializer=inventory__system__pb2.Order.FromString,
           response_serializer=inventory__system__pb2.Success.SerializeToString,
       ),
   }
