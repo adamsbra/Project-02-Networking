@@ -2,24 +2,37 @@ syntax = "proto3";
 
 service InventorySystem{
     rpc GetProduct (ProductIdentifier) returns (Product){}
-    rpc AddProduct (Product) returns (Success) {}
+    rpc AddProduct (Product) returns (ProductIdentifier) {}
     rpc GetProductsByManufacturer (Manufacturer) returns (stream Product){}
     rpc GetProductsInStock (Empty) returns (stream Product) {}
-    rpc UpdateProduct (Product) returns (Success) {}
+    rpc DecreaseProductAmount (ProductAmount) returns (Success) {}
+    rpc IncreaseProductAmount (ProductAmount) returns (Success) {}
+    rpc UpdateProductManufacturer (ProductManufacturer) returns (Success) {}
+    rpc UpdateProductDescription (ProductDescription) returns (Success) {}
+    rpc UpdateProductSaleCost (ProductSaleCost) returns (Success) {}
+    rpc UpdateProductWholesaleCost (ProductWholesaleCost) returns (Success) {}
     rpc GetOrder (OrderID) returns (Order) {}
     rpc AddOrder (Order) returns (OrderID) {}
+    rpc UpdateOrder(Order) returns (Success) {}
 }
 
-message Empty {
+message Product{
+    string name = 1;
+    string id = 2;
+    int64 amount = 3;
+    string description = 4;
+    string manufacturer = 5;
+    double sale_cost = 6;
+    double wholesale_cost = 7;
 }
 
 message Order {
     string id = 1;
     string destination = 2;
     string date = 3;
-    repeated Product products = 4;
-    boolean is_paid = 5;
-    boolean is_shipped = 6;
+    repeated ProductAmount products = 4;
+    bool is_paid = 5;
+    bool is_shipped = 6;
 }
 
 message OrderID{
@@ -35,16 +48,35 @@ message ProductIdentifier {
     string id = 2;
 }
 
+message ProductAmount {
+    ProductIdentifier product_identifier = 1;
+    int64 amount = 2;
+}
+
+message ProductDescription {
+    ProductIdentifier product_identifier = 1;
+    string description = 2;
+}
+
+message ProductManufacturer {
+    ProductIdentifier product_identifier = 1;
+    string manufacturer = 2;
+}
+
+message ProductSaleCost {
+    ProductIdentifier product_identifier = 1;
+    double sale_cost = 2;
+}
+
+message ProductWholesaleCost {
+    ProductIdentifier product_identifier = 1;
+    double wholesale_cost = 2;
+}
+
+
 message Manufacturer {
     string manufacturer = 1;
 }
 
-message Product{
-    string name = 1;
-    string id = 2;
-    int64 amount = 3;
-    string description = 4;
-    string manufacturer = 5;
-    double sale_cost = 6;
-    double wholesale_cost = 7;
+message Empty {
 }
