@@ -13,7 +13,14 @@ service InventorySystem{
     rpc UpdateProductWholesaleCost (ProductWholesaleCost) returns (Success) {}
     rpc GetOrder (OrderID) returns (Order) {}
     rpc AddOrder (Order) returns (OrderID) {}
-    rpc UpdateOrder(Order) returns (Success) {}
+    rpc AddProductToOrder (OrderProduct) returns (Success) {}
+    rpc RemoveProductFromOrder (OrderProduct) returns (Success) {}
+    rpc UpdateOrderDestination (OrderDestination) returns (Success) {}
+    rpc UpdateOrderDate (OrderDate) returns (Success) {}
+    rpc UpdateOrderPaid (OrderPaid) returns (Success) {}
+    rpc UpdateOrderShipped (OrderShipped) returns (Success) {}
+    rpc GetUnshippedOrders (Empty) returns (stream Order) {}
+    rpc GetUnpaidOrders (Empty) returns (stream Order) {}
 }
 
 message Product{
@@ -37,6 +44,26 @@ message Order {
 
 message OrderID{
     string id = 1;
+}
+
+message OrderDestination {
+    OrderID id = 1;
+    string destination = 2;
+}
+
+message OrderDate {
+    OrderID id = 1;
+    string date = 2;
+}
+
+message OrderPaid{
+    OrderID id = 1;
+    bool is_paid = 2;
+}
+
+message OrderShipped {
+    OrderID id = 1;
+    bool is_shipped = 2;
 }
 
 message Success {
@@ -73,6 +100,10 @@ message ProductWholesaleCost {
     double wholesale_cost = 2;
 }
 
+ message OrderProduct {
+     OrderID id = 1;
+     ProductAmount product_amount = 2;
+ }
 
 message Manufacturer {
     string manufacturer = 1;
