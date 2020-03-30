@@ -149,8 +149,77 @@ def get_order(id_, inventory):
     else:
         return None
 
-def add_product_to_order(order, product_name, product_id, product_amount):
-    pass
+def add_product_to_order(order, inventory, new_product_name, new_product_id, new_product_amount):
+    for old_product in order.products:
+        if new_product_name in old_product or new_product_id in old_product:
+            product = get_product(old_product[0], old_product[1], inventory)
+            if product.amount >= new_product_amount:
+                product.amount -= new_product_amount
+                old_product[2] += new_product_amount
+                return True
+            else:
+                return False
+        else:
+            product = get_product(new_product_name, new_product_id, inventory)
+            if product.amount >= new_product_amount:
+                product.amount -= new_product_amount
+                order.products.append([product.name, product.id, new_product_amount])
+                return True
+            else:
+                return False
+
+def remove_product_from_order(order, inventory, new_product_name, new_product_id, new_product_amount):
+    for old_product in order.products:
+        if new_product_name in old_product or new_product_id in old_product:
+            product = get_product(old_product[0], old_product[1], inventory)
+            if old_product[2] > new_product_amount:
+                product.amount += new_product_amount
+                old_product[2] -= new_product_amount
+                return True
+            if old_product[2] == new_product_amount:
+                product.amount += new_product_amount
+                order.products.remove([old_product[0], old_product[1], old_product[2]])
+                return True
+            else:
+                return False
+        else:
+            return False
+
+
+def update_order_destination(order_id, inventory, destination):
+    if (is_order(order_id, inventory)):
+        order = get_order(order_id, inventory)
+        order.destination = destination
+        return True
+    else:
+        return False
+
+def update_order_date(order_id, inventory, date):
+    if (is_order(order_id, inventory)):
+        order = get_order(order_id, inventory)
+        order.date = date
+        return True
+    else:
+        return False
+
+
+def update_order_paid(order_id, inventory, is_paid):
+    if (is_order(order_id, inventory)):
+        order = get_order(order_id, inventory)
+        order.is_paid = is_paid
+        return True
+    else:
+        return False
+
+
+def update_order_shipped(order_id, inventory, is_shipped):
+    if (is_order(order_id, inventory)):
+        order = get_order(order_id, inventory)
+        order.is_shipped = is_shipped
+        return True
+    else:
+        return False
+
 
 '''
 These are utility functions for gRPC methods, simply to convert back and forth between our objects
