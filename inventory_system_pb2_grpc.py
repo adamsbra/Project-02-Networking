@@ -74,10 +74,45 @@ class InventorySystemStub(object):
         request_serializer=inventory__system__pb2.Order.SerializeToString,
         response_deserializer=inventory__system__pb2.OrderID.FromString,
         )
-    self.UpdateOrder = channel.unary_unary(
-        '/InventorySystem/UpdateOrder',
-        request_serializer=inventory__system__pb2.Order.SerializeToString,
+    self.AddProductToOrder = channel.unary_unary(
+        '/InventorySystem/AddProductToOrder',
+        request_serializer=inventory__system__pb2.OrderProduct.SerializeToString,
         response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.RemoveProductFromOrder = channel.unary_unary(
+        '/InventorySystem/RemoveProductFromOrder',
+        request_serializer=inventory__system__pb2.OrderProduct.SerializeToString,
+        response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.UpdateOrderDestination = channel.unary_unary(
+        '/InventorySystem/UpdateOrderDestination',
+        request_serializer=inventory__system__pb2.OrderDestination.SerializeToString,
+        response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.UpdateOrderDate = channel.unary_unary(
+        '/InventorySystem/UpdateOrderDate',
+        request_serializer=inventory__system__pb2.OrderDate.SerializeToString,
+        response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.UpdateOrderPaid = channel.unary_unary(
+        '/InventorySystem/UpdateOrderPaid',
+        request_serializer=inventory__system__pb2.OrderPaid.SerializeToString,
+        response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.UpdateOrderShipped = channel.unary_unary(
+        '/InventorySystem/UpdateOrderShipped',
+        request_serializer=inventory__system__pb2.OrderShipped.SerializeToString,
+        response_deserializer=inventory__system__pb2.Success.FromString,
+        )
+    self.GetUnshippedOrders = channel.unary_stream(
+        '/InventorySystem/GetUnshippedOrders',
+        request_serializer=inventory__system__pb2.Empty.SerializeToString,
+        response_deserializer=inventory__system__pb2.Order.FromString,
+        )
+    self.GetUnpaidOrders = channel.unary_stream(
+        '/InventorySystem/GetUnpaidOrders',
+        request_serializer=inventory__system__pb2.Empty.SerializeToString,
+        response_deserializer=inventory__system__pb2.Order.FromString,
         )
 
 
@@ -169,7 +204,56 @@ class InventorySystemServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def UpdateOrder(self, request, context):
+  def AddProductToOrder(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def RemoveProductFromOrder(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def UpdateOrderDestination(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def UpdateOrderDate(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def UpdateOrderPaid(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def UpdateOrderShipped(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetUnshippedOrders(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def GetUnpaidOrders(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -239,10 +323,45 @@ def add_InventorySystemServicer_to_server(servicer, server):
           request_deserializer=inventory__system__pb2.Order.FromString,
           response_serializer=inventory__system__pb2.OrderID.SerializeToString,
       ),
-      'UpdateOrder': grpc.unary_unary_rpc_method_handler(
-          servicer.UpdateOrder,
-          request_deserializer=inventory__system__pb2.Order.FromString,
+      'AddProductToOrder': grpc.unary_unary_rpc_method_handler(
+          servicer.AddProductToOrder,
+          request_deserializer=inventory__system__pb2.OrderProduct.FromString,
           response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'RemoveProductFromOrder': grpc.unary_unary_rpc_method_handler(
+          servicer.RemoveProductFromOrder,
+          request_deserializer=inventory__system__pb2.OrderProduct.FromString,
+          response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'UpdateOrderDestination': grpc.unary_unary_rpc_method_handler(
+          servicer.UpdateOrderDestination,
+          request_deserializer=inventory__system__pb2.OrderDestination.FromString,
+          response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'UpdateOrderDate': grpc.unary_unary_rpc_method_handler(
+          servicer.UpdateOrderDate,
+          request_deserializer=inventory__system__pb2.OrderDate.FromString,
+          response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'UpdateOrderPaid': grpc.unary_unary_rpc_method_handler(
+          servicer.UpdateOrderPaid,
+          request_deserializer=inventory__system__pb2.OrderPaid.FromString,
+          response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'UpdateOrderShipped': grpc.unary_unary_rpc_method_handler(
+          servicer.UpdateOrderShipped,
+          request_deserializer=inventory__system__pb2.OrderShipped.FromString,
+          response_serializer=inventory__system__pb2.Success.SerializeToString,
+      ),
+      'GetUnshippedOrders': grpc.unary_stream_rpc_method_handler(
+          servicer.GetUnshippedOrders,
+          request_deserializer=inventory__system__pb2.Empty.FromString,
+          response_serializer=inventory__system__pb2.Order.SerializeToString,
+      ),
+      'GetUnpaidOrders': grpc.unary_stream_rpc_method_handler(
+          servicer.GetUnpaidOrders,
+          request_deserializer=inventory__system__pb2.Empty.FromString,
+          response_serializer=inventory__system__pb2.Order.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
