@@ -47,22 +47,22 @@ message OrderID{
 }
 
 message OrderDestination {
-    OrderID id = 1;
+    string id = 1;
     string destination = 2;
 }
 
 message OrderDate {
-    OrderID id = 1;
+    string id = 1;
     string date = 2;
 }
 
 message OrderPaid{
-    OrderID id = 1;
+    string id = 1;
     bool is_paid = 2;
 }
 
 message OrderShipped {
-    OrderID id = 1;
+    string id = 1;
     bool is_shipped = 2;
 }
 
@@ -101,7 +101,7 @@ message ProductWholesaleCost {
 }
 
  message OrderProduct {
-     OrderID id = 1;
+     string id = 1;
      ProductAmount product_amount = 2;
  }
 

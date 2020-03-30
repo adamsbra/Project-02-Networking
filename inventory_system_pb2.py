@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\x16inventory_system.proto\"\x89\x01\n\x07Product\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\x12\x0e\n\x06\x61mount\x18\x03 \x01(\x03\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x05 \x01(\t\x12\x11\n\tsale_cost\x18\x06 \x01(\x01\x12\x16\n\x0ewholesale_cost\x18\x07 \x01(\x01\"}\n\x05Order\x12\n\n\x02id\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12 \n\x08products\x18\x04 \x03(\x0b\x32\x0e.ProductAmount\x12\x0f\n\x07is_paid\x18\x05 \x01(\x08\x12\x12\n\nis_shipped\x18\x06 \x01(\x08\"\x15\n\x07OrderID\x12\n\n\x02id\x18\x01 \x01(\t\"=\n\x10OrderDestination\x12\x14\n\x02id\x18\x01 \x01(\x0b\x32\x08.OrderID\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\"/\n\tOrderDate\x12\x14\n\x02id\x18\x01 \x01(\x0b\x32\x08.OrderID\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\"2\n\tOrderPaid\x12\x14\n\x02id\x18\x01 \x01(\x0b\x32\x08.OrderID\x12\x0f\n\x07is_paid\x18\x02 \x01(\x08\"8\n\x0cOrderShipped\x12\x14\n\x02id\x18\x01 \x01(\x0b\x32\x08.OrderID\x12\x12\n\nis_shipped\x18\x02 \x01(\x08\"\x1a\n\x07Success\x12\x0f\n\x07success\x18\x01 \x01(\x08\"-\n\x11ProductIdentifier\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\"O\n\rProductAmount\x12.\n\x12product_identifier\x18\x01 \x01(\x0b\x32\x12.ProductIdentifier\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x03\"Y\n\x12ProductDescription\x12.\n\x12product_identifier\x18\x01 \x01(\x0b\x32\x12.ProductIdentifier\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\"[\n\x13ProductManufacturer\x12.\n\x12product_identifier\x18\x01 \x01(\x0b\x32\x12.ProductIdentifier\x12\x14\n\x0cmanufacturer\x18\x02 \x01(\t\"T\n\x0fProductSaleCost\x12.\n\x12product_identifier\x18\x01 \x01(\x0b\x32\x12.ProductIdentifier\x12\x11\n\tsale_cost\x18\x02 \x01(\x01\"^\n\x14ProductWholesaleCost\x12.\n\x12product_identifier\x18\x01 \x01(\x0b\x32\x12.ProductIdentifier\x12\x16\n\x0ewholesale_cost\x18\x02 \x01(\x01\"L\n\x0cOrderProduct\x12\x14\n\x02id\x18\x01 \x01(\x0b\x32\x08.OrderID\x12&\n\x0eproduct_amount\x18\x02 \x01(\x0b\x32\x0e.ProductAmount\"$\n\x0cManufacturer\x12\x14\n\x0cmanufacturer\x18\x01 \x01(\t\"\x07\n\x05\x45mpty2\xe7\x07\n\x0fInventorySystem\x12,\n\nGetProduct\x12\x12.ProductIdentifier\x1a\x08.Product\"\x00\x12,\n\nAddProduct\x12\x08.Product\x1a\x12.ProductIdentifier\"\x00\x12\x38\n\x19GetProductsByManufacturer\x12\r.Manufacturer\x1a\x08.Product\"\x00\x30\x01\x12*\n\x12GetProductsInStock\x12\x06.Empty\x1a\x08.Product\"\x00\x30\x01\x12\x33\n\x15\x44\x65\x63reaseProductAmount\x12\x0e.ProductAmount\x1a\x08.Success\"\x00\x12\x33\n\x15IncreaseProductAmount\x12\x0e.ProductAmount\x1a\x08.Success\"\x00\x12=\n\x19UpdateProductManufacturer\x12\x14.ProductManufacturer\x1a\x08.Success\"\x00\x12;\n\x18UpdateProductDescription\x12\x13.ProductDescription\x1a\x08.Success\"\x00\x12\x35\n\x15UpdateProductSaleCost\x12\x10.ProductSaleCost\x1a\x08.Success\"\x00\x12?\n\x1aUpdateProductWholesaleCost\x12\x15.ProductWholesaleCost\x1a\x08.Success\"\x00\x12\x1e\n\x08GetOrder\x12\x08.OrderID\x1a\x06.Order\"\x00\x12\x1e\n\x08\x41\x64\x64Order\x12\x06.Order\x1a\x08.OrderID\"\x00\x12.\n\x11\x41\x64\x64ProductToOrder\x12\r.OrderProduct\x1a\x08.Success\"\x00\x12\x33\n\x16RemoveProductFromOrder\x12\r.OrderProduct\x1a\x08.Success\"\x00\x12\x37\n\x16UpdateOrderDestination\x12\x11.OrderDestination\x1a\x08.Success\"\x00\x12)\n\x0fUpdateOrderDate\x12\n.OrderDate\x1a\x08.Success\"\x00\x12)\n\x0fUpdateOrderPaid\x12\n.OrderPaid\x1a\x08.Success\"\x00\x12/\n\x12UpdateOrderShipped\x12\r.OrderShipped\x1a\x08.Success\"\x00\x12(\n\x12GetUnshippedOrders\x12\x06.Empty\x1a\x06.Order\"\x00\x30\x01\x12%\n\x0fGetUnpaidOrders\x12\x06.Empty\x1a\x06.Order\"\x00\x30\x01\x62\x06proto3'
+  serialized_pb=b'\n\x16inventory_system.proto\"\x89\x01\n\x07Product\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\x12\x0e\n\x06\x61mount\x18\x03 \x01(\x03\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x14\n\x0cmanufacturer\x18\x05 \x01(\t\x12\x11\n\tsale_cost\x18\x06 \x01(\x01\x12\x16\n\x0ewholesale_cost\x18\x07 \x01(\x01\"}\n\x05Order\x12\n\n\x02id\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x03 \x01(\t\x12 \n\x08products\x18\x04 \x03(\x0b\x32\x0e.ProductAmount\x12\x0f\n\x07is_paid\x18\x05 \x01(\x08\x12\x12\n\nis_shipped\x18\x06 \x01(\x08\"\x15\n\x07OrderID\x12\n\n\x02id\x18\x01 \x01(\t\"3\n\x10OrderDestination\x12\n\n\x02id\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65stination\x18\x02 \x01(\t\"%\n\tOrderDate\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61te\x18\x02 \x01(\t\"(\n\tOrderPaid\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0f\n\x07is_paid\x18\x02 \x01(\x08\".\n\x0cOrderShipped\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nis_shipped\x18\x02 \x01(\x08\"\x1a\n\x07Success\x12\x0f\n\x07success\x18\x01 \x01(\x08\"-\n\x11ProductIdentifier\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\"O\n\rProductAmount\x12.\n\x12product_identifier\x18\x01 \x01(\x0b\x32\x12.ProductIdentifier\x12\x0e\n\x06\x61mount\x18\x02 \x01(\x03\"Y\n\x12ProductDescription\x12.\n\x12product_identifier\x18\x01 \x01(\x0b\x32\x12.ProductIdentifier\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\"[\n\x13ProductManufacturer\x12.\n\x12product_identifier\x18\x01 \x01(\x0b\x32\x12.ProductIdentifier\x12\x14\n\x0cmanufacturer\x18\x02 \x01(\t\"T\n\x0fProductSaleCost\x12.\n\x12product_identifier\x18\x01 \x01(\x0b\x32\x12.ProductIdentifier\x12\x11\n\tsale_cost\x18\x02 \x01(\x01\"^\n\x14ProductWholesaleCost\x12.\n\x12product_identifier\x18\x01 \x01(\x0b\x32\x12.ProductIdentifier\x12\x16\n\x0ewholesale_cost\x18\x02 \x01(\x01\"B\n\x0cOrderProduct\x12\n\n\x02id\x18\x01 \x01(\t\x12&\n\x0eproduct_amount\x18\x02 \x01(\x0b\x32\x0e.ProductAmount\"$\n\x0cManufacturer\x12\x14\n\x0cmanufacturer\x18\x01 \x01(\t\"\x07\n\x05\x45mpty2\xe7\x07\n\x0fInventorySystem\x12,\n\nGetProduct\x12\x12.ProductIdentifier\x1a\x08.Product\"\x00\x12,\n\nAddProduct\x12\x08.Product\x1a\x12.ProductIdentifier\"\x00\x12\x38\n\x19GetProductsByManufacturer\x12\r.Manufacturer\x1a\x08.Product\"\x00\x30\x01\x12*\n\x12GetProductsInStock\x12\x06.Empty\x1a\x08.Product\"\x00\x30\x01\x12\x33\n\x15\x44\x65\x63reaseProductAmount\x12\x0e.ProductAmount\x1a\x08.Success\"\x00\x12\x33\n\x15IncreaseProductAmount\x12\x0e.ProductAmount\x1a\x08.Success\"\x00\x12=\n\x19UpdateProductManufacturer\x12\x14.ProductManufacturer\x1a\x08.Success\"\x00\x12;\n\x18UpdateProductDescription\x12\x13.ProductDescription\x1a\x08.Success\"\x00\x12\x35\n\x15UpdateProductSaleCost\x12\x10.ProductSaleCost\x1a\x08.Success\"\x00\x12?\n\x1aUpdateProductWholesaleCost\x12\x15.ProductWholesaleCost\x1a\x08.Success\"\x00\x12\x1e\n\x08GetOrder\x12\x08.OrderID\x1a\x06.Order\"\x00\x12\x1e\n\x08\x41\x64\x64Order\x12\x06.Order\x1a\x08.OrderID\"\x00\x12.\n\x11\x41\x64\x64ProductToOrder\x12\r.OrderProduct\x1a\x08.Success\"\x00\x12\x33\n\x16RemoveProductFromOrder\x12\r.OrderProduct\x1a\x08.Success\"\x00\x12\x37\n\x16UpdateOrderDestination\x12\x11.OrderDestination\x1a\x08.Success\"\x00\x12)\n\x0fUpdateOrderDate\x12\n.OrderDate\x1a\x08.Success\"\x00\x12)\n\x0fUpdateOrderPaid\x12\n.OrderPaid\x1a\x08.Success\"\x00\x12/\n\x12UpdateOrderShipped\x12\r.OrderShipped\x1a\x08.Success\"\x00\x12(\n\x12GetUnshippedOrders\x12\x06.Empty\x1a\x06.Order\"\x00\x30\x01\x12%\n\x0fGetUnpaidOrders\x12\x06.Empty\x1a\x06.Order\"\x00\x30\x01\x62\x06proto3'
 )
 
 
@@ -203,8 +203,8 @@ _ORDERDESTINATION = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='id', full_name='OrderDestination.id', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -228,7 +228,7 @@ _ORDERDESTINATION = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=316,
-  serialized_end=377,
+  serialized_end=367,
 )
 
 
@@ -241,8 +241,8 @@ _ORDERDATE = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='id', full_name='OrderDate.id', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -265,8 +265,8 @@ _ORDERDATE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=379,
-  serialized_end=426,
+  serialized_start=369,
+  serialized_end=406,
 )
 
 
@@ -279,8 +279,8 @@ _ORDERPAID = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='id', full_name='OrderPaid.id', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -303,8 +303,8 @@ _ORDERPAID = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=428,
-  serialized_end=478,
+  serialized_start=408,
+  serialized_end=448,
 )
 
 
@@ -317,8 +317,8 @@ _ORDERSHIPPED = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='id', full_name='OrderShipped.id', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -341,8 +341,8 @@ _ORDERSHIPPED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=480,
-  serialized_end=536,
+  serialized_start=450,
+  serialized_end=496,
 )
 
 
@@ -372,8 +372,8 @@ _SUCCESS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=538,
-  serialized_end=564,
+  serialized_start=498,
+  serialized_end=524,
 )
 
 
@@ -410,8 +410,8 @@ _PRODUCTIDENTIFIER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=566,
-  serialized_end=611,
+  serialized_start=526,
+  serialized_end=571,
 )
 
 
@@ -448,8 +448,8 @@ _PRODUCTAMOUNT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=613,
-  serialized_end=692,
+  serialized_start=573,
+  serialized_end=652,
 )
 
 
@@ -486,8 +486,8 @@ _PRODUCTDESCRIPTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=694,
-  serialized_end=783,
+  serialized_start=654,
+  serialized_end=743,
 )
 
 
@@ -524,8 +524,8 @@ _PRODUCTMANUFACTURER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=785,
-  serialized_end=876,
+  serialized_start=745,
+  serialized_end=836,
 )
 
 
@@ -562,8 +562,8 @@ _PRODUCTSALECOST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=878,
-  serialized_end=962,
+  serialized_start=838,
+  serialized_end=922,
 )
 
 
@@ -600,8 +600,8 @@ _PRODUCTWHOLESALECOST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=964,
-  serialized_end=1058,
+  serialized_start=924,
+  serialized_end=1018,
 )
 
 
@@ -614,8 +614,8 @@ _ORDERPRODUCT = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='id', full_name='OrderProduct.id', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -638,8 +638,8 @@ _ORDERPRODUCT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1060,
-  serialized_end=1136,
+  serialized_start=1020,
+  serialized_end=1086,
 )
 
 
@@ -669,8 +669,8 @@ _MANUFACTURER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1138,
-  serialized_end=1174,
+  serialized_start=1088,
+  serialized_end=1124,
 )
 
 
@@ -693,21 +693,16 @@ _EMPTY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1176,
-  serialized_end=1183,
+  serialized_start=1126,
+  serialized_end=1133,
 )
 
 _ORDER.fields_by_name['products'].message_type = _PRODUCTAMOUNT
-_ORDERDESTINATION.fields_by_name['id'].message_type = _ORDERID
-_ORDERDATE.fields_by_name['id'].message_type = _ORDERID
-_ORDERPAID.fields_by_name['id'].message_type = _ORDERID
-_ORDERSHIPPED.fields_by_name['id'].message_type = _ORDERID
 _PRODUCTAMOUNT.fields_by_name['product_identifier'].message_type = _PRODUCTIDENTIFIER
 _PRODUCTDESCRIPTION.fields_by_name['product_identifier'].message_type = _PRODUCTIDENTIFIER
 _PRODUCTMANUFACTURER.fields_by_name['product_identifier'].message_type = _PRODUCTIDENTIFIER
 _PRODUCTSALECOST.fields_by_name['product_identifier'].message_type = _PRODUCTIDENTIFIER
 _PRODUCTWHOLESALECOST.fields_by_name['product_identifier'].message_type = _PRODUCTIDENTIFIER
-_ORDERPRODUCT.fields_by_name['id'].message_type = _ORDERID
 _ORDERPRODUCT.fields_by_name['product_amount'].message_type = _PRODUCTAMOUNT
 DESCRIPTOR.message_types_by_name['Product'] = _PRODUCT
 DESCRIPTOR.message_types_by_name['Order'] = _ORDER
@@ -855,8 +850,8 @@ _INVENTORYSYSTEM = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=1186,
-  serialized_end=2185,
+  serialized_start=1136,
+  serialized_end=2135,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetProduct',
