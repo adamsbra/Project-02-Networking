@@ -121,6 +121,73 @@ class InventorySystem(inventory_system_pb2_grpc.InventorySystemServicer):
         else:
             return self.null_order
 
+    def AddProductToOrder(self, request, context):
+        product_amount = request.product_amount
+        product_identifier = product_amount.product_identifier
+        product_name = product_identifier.name
+        product_id = product_identifier.id
+        product_amount = product_amount.amount
+        order_id = request.id
+        if add_product_to_order(order_id, inventory, product_name, product_id, product_amount):
+            return inventory_system_pb2.Success(success = True)
+        else:
+            return inventory_system_pb2.Success(success = False)
+
+    def RemoveProductFromOrder(self, request, context):
+        product_amount = request.product_amount
+        product_identifier = product_amount.product_identifier
+        product_name = product_identifier.name
+        product_id = product_identifier.id
+        product_amount = product_amount.amount
+        order_id = request.id
+        if remove_product_from_order(order_id, inventory, product_name, product_id, product_amount):
+            return inventory_system_pb2.Success(success = True)
+        else:
+            return inventory_system_pb2.Success(success = False)
+
+    def UpdateOrderDestination(self, request, context):
+        order_id = request.id
+        destination = request.destination
+        if update_order_destination(order_id, inventory, destination):
+            return inventory_system_pb2.Success(success = True)
+        else:
+            return inventory_system_pb2.Success(success = False)
+
+    def UpdateOrderDate(self, request, context):
+        order_id = request.id
+        date = request.date
+        if update_order_date(order_id, inventory, date):
+            return inventory_system_pb2.Success(success = True)
+        else:
+            return inventory_system_pb2.Success(success = False)
+
+    def UpdateOrderPaid(self, request, context):
+        order_id = request.id
+        is_paid = request.is_paid
+        if update_order_paid(order_id, inventory, is_paid):
+            return inventory_system_pb2.Success(success = True)
+        else:
+            return inventory_system_pb2.Success(success = False)
+
+    def UpdateOrderShipped(self, request, context):
+        order_id = request.id
+        is_shipped = request.is_shipped
+        if update_order_shipped(order_id, inventory, is_shipped):
+            return inventory_system_pb2.Success(success = True)
+        else:
+            return inventory_system_pb2.Success(success = False)
+
+    def GetUnshippedOrders(self, request, context):
+        for order in invetory.orders.values():
+            if not order.is_shipped:
+                yield init_order(order)
+
+    def GetUnpaidOrders(self, request, context):
+        for order in inventory.orders.values():
+            if not order.is_paid:
+                yield init_order(order)
+
+
 
 class Inventory:
 
