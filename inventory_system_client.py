@@ -3,6 +3,7 @@ import inventory_system_pb2
 import inventory_system_pb2_grpc
 
 def main():
+    parser = argparse.ArgumentParser()
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = inventory_system_pb2_grpc.InventorySystemStub(channel)
         #Add 4 Products initially to test AddProduct method
@@ -17,18 +18,18 @@ def main():
         # Get a product to test GetProduct
         # response = stub.GetProduct(inventory_system_pb2.ProductIdentifier(name = "Product 1", id = "-1"))
         # print(response)
-        # # Get products by a manufacturer to test GetProductsByManufacturer
+        # # # Get products by a manufacturer to test GetProductsByManufacturer
         # response = stub.GetProductsByManufacturer(inventory_system_pb2.Manufacturer(manufacturer = "Google"))
         # for i in response:
         #     print(i)
-        # # Get products that are in stock to test GetProductsInStock
+        # # # Get products that are in stock to test GetProductsInStock
         # response = stub.GetProductsInStock(inventory_system_pb2.Empty())
         # for i in response:
         #     print(i)
-        # # Update a product to test UpdateProductDescription
+        # # # Update a product to test UpdateProductDescription
         # response = stub.UpdateProductDescription(inventory_system_pb2.ProductDescription(product_identifier = inventory_system_pb2.ProductIdentifier(name = "Product 4", id = "-1"), description = "Test Product Changed"))
         # print(response)
-        # # Get a product to confirm test of UpdateProduct
+        # # # Get a product to confirm test of UpdateProduct
         # response = stub.GetProduct(inventory_system_pb2.ProductIdentifier(name="Product 4", id = "-1"))
         # print(response)
 
@@ -72,39 +73,36 @@ def main():
         # response = stub.AddOrder(order)
         # print(response)
 
-        # response = stub.GetOrder(inventory_system_pb2.OrderID(id = "19a40a5c-24f1-49b4-957b-1421a3899212"))
+        # response = stub.GetOrder(inventory_system_pb2.OrderID(id = "6e7d38e5-2754-4aca-b5c6-30b441fb0c25"))
         # print(response)
         # print(response)
-        # response = stub.GetProduct(inventory_system_pb2.ProductIdentifier(id = "f9e7b477-ccab-475b-8c67-08b3c074b132"))
-        # print(response)
-
-        # response = stub.RemoveProductFromOrder(inventory_system_pb2.OrderProduct(id = "19a40a5c-24f1-49b4-957b-1421a3899212", product_amount = inventory_system_pb2.ProductAmount(product_identifier = inventory_system_pb2.ProductIdentifier(name = "Product 4"), amount = 25)))
-
+        # response = stub.GetProduct(inventory_system_pb2.ProductIdentifier(name = "Product 4"))
         # print(response)
 
+        # response = stub.RemoveProductFromOrder(inventory_system_pb2.OrderProduct(id = "6e7d38e5-2754-4aca-b5c6-30b441fb0c25", product_amount = inventory_system_pb2.ProductAmount(product_identifier = inventory_system_pb2.ProductIdentifier(name = "Product 4"), amount = 3)))
 
-        # print(response)
-        # response = stub.GetProduct(inventory_system_pb2.ProductIdentifier(id = "f9e7b477-ccab-475b-8c67-08b3c074b132"))
-        # print(response)
-
-        # response = stub.UpdateOrderDestination(inventory_system_pb2.OrderDestination(id = "19a40a5c-24f1-49b4-957b-1421a3899212", destination = "Changed it ya dummy"))
+        # print(response.success)
+        # response = stub.GetProduct(inventory_system_pb2.ProductIdentifier(name = "Product 4"))
         # print(response)
 
-        # response = stub.UpdateOrderDate(inventory_system_pb2.OrderDate(id = "19a40a5c-24f1-49b4-957b-1421a3899212", date = "In like 5 minutes"))
+        # response = stub.UpdateOrderDestination(inventory_system_pb2.OrderDestination(id = "6e7d38e5-2754-4aca-b5c6-30b441fb0c25", destination = "Changed it ya dummy"))
         # print(response)
 
-        # response = stub.UpdateOrderPaid(inventory_system_pb2.OrderPaid(id = "19a40a5c-24f1-49b4-957b-1421a3899212", is_paid = False))
+        # response = stub.UpdateOrderDate(inventory_system_pb2.OrderDate(id = "6e7d38e5-2754-4aca-b5c6-30b441fb0c25", date = "In like 5 minutes"))
         # print(response)
 
-        # response = stub.UpdateOrderShipped(inventory_system_pb2.OrderShipped(id = "19a40a5c-24f1-49b4-957b-1421a3899212", is_shipped = False))
+        # response = stub.UpdateOrderPaid(inventory_system_pb2.OrderPaid(id = "6e7d38e5-2754-4aca-b5c6-30b441fb0c25", is_paid = False))
         # print(response)
 
-        # response = stub.GetOrder(inventory_system_pb2.OrderID(id = "19a40a5c-24f1-49b4-957b-1421a3899212"))
+        # response = stub.UpdateOrderShipped(inventory_system_pb2.OrderShipped(id = "6e7d38e5-2754-4aca-b5c6-30b441fb0c25", is_shipped = False))
         # print(response)
 
-        response = stub.GetUnpaidOrders(inventory_system_pb2.Empty())
-        for i in response:
-            print(i)
+        # response = stub.GetOrder(inventory_system_pb2.OrderID(id = "6e7d38e5-2754-4aca-b5c6-30b441fb0c25"))
+        # print(response)
+
+        # response = stub.GetUnpaidOrders(inventory_system_pb2.Empty())
+        # for i in response:
+        #     print(i)
 
 
 if __name__=="__main__":

@@ -3,10 +3,221 @@ import inventory_system_pb2
 import inventory_system_pb2_grpc
 from uuid import uuid4
 
-null_product = inventory_system_pb2.Product(name = "null", id = "-1", amount = -1, description = "null", manufacturer = "null",
-                sale_cost = 0, wholesale_cost = 0)
-null_identifier = inventory_system_pb2.ProductIdentifier(name = "null", id = "-1")
-null_order = inventory_system_pb2.Order(id = "-1", destination = "N/A", date = "1/1/1970", products = [], is_paid = False, is_shipped = False)
+
+class Inventory:
+
+    def __init__(self):
+        self.products_by_id = {}
+        self.products_by_name= {}
+        self.orders = {}
+
+    '''
+    The following utility functions are useful for adding, getting and modifying products. All of these methods
+    recieve the inventory as an argument, we should consider changing this in the future somehow.
+    '''
+    def get_product(self, name, id_):
+        if name in self.products_by_name:
+            return self.products_by_name[name]
+        elif id_ in self.products_by_id:
+            return self.products_by_id[id_]
+        else:
+            return None
+
+    def add_product(self, product):
+        if self.is_product(product.name, product.id):
+            return "null", "-1"
+        self.products_by_id[product.id] = product
+        self.products_by_name[product.name] = product
+        return product.name, product.id
+
+    def is_product(self, name, id_):
+        if name in self.products_by_name or id_ in self.products_by_id:
+            return True
+        else:
+            return False
+
+
+    def update_product(self, product):
+        self.products_by_name[product.name] = product
+        self.products_by_id[product.id] = product
+
+
+    def update_description(self, name, id_, description):
+        if self.is_product(name, id_):
+            product = self.get_product(name, id_)
+            product.description = description
+            return True
+        else:
+            return False
+
+
+    def update_manufacturer(self, name, id_, manufacturer):
+        if self.is_product(name, id_):
+            product = self.get_product(name, id_)
+            product.manufacturer = manufacturer
+            return True
+        else:
+            return False
+
+
+    def update_wholesale_cost(self, name, id_, wholesale_cost):
+        if self.is_product(name, id_):
+            product = self.get_product(name, id_)
+            product.wholesale_cost = wholesale_cost
+            return True
+        else:
+            return False
+
+
+    def update_sale_cost(self, name, id_, sale_cost):
+        if self.is_product(name, id_):
+            product = self.get_product(name, id_)
+            product.sale_cost = sale_cost
+            return True
+        else:
+            return False
+
+
+    def increase_product_amount(self, name, id_, amount):
+        if self.is_product(name, id_):
+            product = self.get_product(name, id_)
+            product.amount += amount
+            return True
+        else:
+            return False
+
+
+    def decrease_product_amount(self, name, id_, amount):
+        if self.is_product(name, id_):
+            product = self.get_product(name, id_)
+            if product.amount - amount >= 0:
+                product.amount -= amount
+                return True
+            else:
+                return False
+        else:
+            return False
+
+
+    '''
+    These utility methods are related to adding and modifying orders.
+    '''
+    # This function will most likely need to be refactored.
+    def add_order(self, order):
+        valid_products = []
+        if not self.is_order(order.id):
+            for order_product in order.products:
+                name = order_product.product_identifier.name
+                id_ = order_product.product_identifier.id
+                if self.is_product(name, id_):
+                    product = self.get_product(name, id_)
+                    if product.amount >= order_product.amount:
+                        valid_products.append([product.name, product.id, order_product.amount])
+                        product.amount -= order_product.amount
+            order.products = valid_products
+            self.orders[order.id] = order
+            return order.id
+        else:
+            return "-1"
+
+
+    def is_order(self, id_):
+        if id_ in self.orders:
+            return True
+        else:
+            return False
+
+
+    def get_order(self, id_):
+        if self.is_order(id_):
+            return self.orders[id_]
+        else:
+            return None
+
+
+    def add_product_to_order(self, order_id, new_product_name, new_product_id, new_product_amount):
+        if not self.is_order(order_id):
+            return False
+        order = self.get_order(order_id)
+        for old_product in order.products:
+            if new_product_name in old_product or new_product_id in old_product:
+                product = self.get_product(old_product[0], old_product[1])
+                if product.amount >= new_product_amount:
+                    product.amount -= new_product_amount
+                    old_product[2] += new_product_amount
+                    self.orders[order_id] = order
+                    return True
+                else:
+                    return False
+            else:
+                product = self.get_product(new_product_name, new_product_id)
+                if product.amount >= new_product_amount:
+                    product.amount -= new_product_amount
+                    order.products.append([product.name, product.id, new_product_amount])
+                    self.orders[order_id] = order
+                    return True
+                else:
+                    return False
+
+
+    def remove_product_from_order(self, order_id, new_product_name, new_product_id, new_product_amount):
+        if not self.is_order(order_id):
+            return False
+        order = self.get_order(order_id)
+        for old_product in order.products:
+            if new_product_name in old_product or new_product_id in old_product:
+                product = self.get_product(old_product[0], old_product[1])
+                if old_product[2] > new_product_amount:
+                    product.amount += new_product_amount
+                    old_product[2] -= new_product_amount
+                    self.orders[order_id] = order
+                    return True
+                if old_product[2] == new_product_amount:
+                    product.amount += new_product_amount
+                    order.products.remove([old_product[0], old_product[1], old_product[2]])
+                    self.orders[order_id] = order
+                    return True
+                else:
+                    return False
+            else:
+                return False
+
+
+    def update_order_destination(self, order_id, destination):
+        if (self.is_order(order_id)):
+            order = self.get_order(order_id)
+            order.destination = destination
+            return True
+        else:
+            return False
+
+    def update_order_date(self, order_id, date):
+        if (self.is_order(order_id)):
+            order = self.get_order(order_id)
+            order.date = date
+            return True
+        else:
+            return False
+
+
+    def update_order_paid(self, order_id, is_paid):
+        if (self.is_order(order_id)):
+            order = self.get_order(order_id)
+            order.is_paid = is_paid
+            return True
+        else:
+            return False
+
+
+    def update_order_shipped(self, order_id, is_shipped):
+        if (self.is_order(order_id)):
+            order = self.get_order(order_id)
+            order.is_shipped = is_shipped
+            return True
+        else:
+            return False
+
+
 
 
 class Product:
@@ -34,200 +245,18 @@ class Order:
         self.is_shipped = is_shipped
 
 
-
-'''
-The following utility functions are useful for adding, getting and modifying products.
-'''
-def get_product(name, id_, inventory):
-    if name in inventory.products_by_name:
-        return inventory.products_by_name[name]
-    elif id_ in inventory.products_by_id:
-        return inventory.products_by_id[id_]
-    else:
-        return None
-
-
-def is_product(name, id_, inventory):
-    if name in inventory.products_by_name or id_ in inventory.products_by_id:
-        return True
-    else:
-        return False
-
-def update_product(product, inventory):
-    inventory.products_by_name[product.name] = product
-    inventory.products_by_id[product.id] = product
-
-
-def update_description(name, id_, description, inventory):
-    if is_product(name, id_, inventory):
-        product = get_product(name, id_, inventory)
-        product.description = description
-        return True
-    else:
-        return False
-
-
-def update_manufacturer(name, id_, manufacturer, inventory):
-    if is_product(name, id_, inventory):
-        product = get_product(name, id_, inventory)
-        product.manufacturer = manufacturer
-        return True
-    else:
-        return False
-
-
-def update_wholesale_cost(name, id_, wholesale_cost, inventory):
-    if is_product(name, id_, inventory):
-        product = get_product(name, id_, inventory)
-        product.wholesale_cost = wholesale_cost
-        return True
-    else:
-        return False
-
-
-def update_sale_cost(name, id_, sale_cost, inventory):
-    if is_product(name, id_, inventory):
-        product = get_product(name, id_, inventory)
-        product.sale_cost = sale_cost
-        return True
-    else:
-        return False
-
-
-def increase_product_amount(name, id_, amount, inventory):
-    if is_product(name, id_, inventory):
-        product = get_product(name, id_, inventory)
-        product.amount += amount
-        return True
-    else:
-        return False
-
-
-def decrease_product_amount(name, id_, amount, inventory):
-    if is_product(name, id_, inventory):
-        product = get_product(name, id_, inventory)
-        if product.amount - amount >= 0:
-            product.amount -= amount
-            return True
-        else:
-            return False
-    else:
-        return False
-
-
-'''
-These utility methods are related to adding and modifying orders.
-'''
-# This function will most likely need to be refactored.
-def add_order(order, inventory):
-    valid_products = []
-    if not is_order(order.id, inventory):
-        for order_product in order.products:
-            name = order_product.product_identifier.name
-            id_ = order_product.product_identifier.id
-            if is_product(name, id_, inventory):
-                product = get_product(name, id_, inventory)
-                if product.amount >= order_product.amount:
-                    valid_products.append([product.name, product.id, order_product.amount])
-                    product.amount -= order_product.amount
-        order.products = valid_products
-        inventory.orders[order.id] = order
-        return order.id
-    else:
-        return "-1"
-
-
-def is_order(id_, inventory):
-    if id_ in inventory.orders:
-        return True
-    else:
-        return False
-
-def get_order(id_, inventory):
-    if is_order(id_, inventory):
-        return inventory.orders[id_]
-    else:
-        return None
-
-def add_product_to_order(order, inventory, new_product_name, new_product_id, new_product_amount):
-    for old_product in order.products:
-        if new_product_name in old_product or new_product_id in old_product:
-            product = get_product(old_product[0], old_product[1], inventory)
-            if product.amount >= new_product_amount:
-                product.amount -= new_product_amount
-                old_product[2] += new_product_amount
-                return True
-            else:
-                return False
-        else:
-            product = get_product(new_product_name, new_product_id, inventory)
-            if product.amount >= new_product_amount:
-                product.amount -= new_product_amount
-                order.products.append([product.name, product.id, new_product_amount])
-                return True
-            else:
-                return False
-
-def remove_product_from_order(order, inventory, new_product_name, new_product_id, new_product_amount):
-    for old_product in order.products:
-        if new_product_name in old_product or new_product_id in old_product:
-            product = get_product(old_product[0], old_product[1], inventory)
-            if old_product[2] > new_product_amount:
-                product.amount += new_product_amount
-                old_product[2] -= new_product_amount
-                return True
-            if old_product[2] == new_product_amount:
-                product.amount += new_product_amount
-                order.products.remove([old_product[0], old_product[1], old_product[2]])
-                return True
-            else:
-                return False
-        else:
-            return False
-
-
-def update_order_destination(order_id, inventory, destination):
-    if (is_order(order_id, inventory)):
-        order = get_order(order_id, inventory)
-        order.destination = destination
-        return True
-    else:
-        return False
-
-def update_order_date(order_id, inventory, date):
-    if (is_order(order_id, inventory)):
-        order = get_order(order_id, inventory)
-        order.date = date
-        return True
-    else:
-        return False
-
-
-def update_order_paid(order_id, inventory, is_paid):
-    if (is_order(order_id, inventory)):
-        order = get_order(order_id, inventory)
-        order.is_paid = is_paid
-        return True
-    else:
-        return False
-
-
-def update_order_shipped(order_id, inventory, is_shipped):
-    if (is_order(order_id, inventory)):
-        order = get_order(order_id, inventory)
-        order.is_shipped = is_shipped
-        return True
-    else:
-        return False
-
-
 '''
 These are utility functions for gRPC methods, simply to convert back and forth between our objects
 and the gRPC objects.
 '''
 def init_product(product):
-    return inventory_system_pb2.Product(name = product.name, id = product.id, amount = product.amount, description = product.description, manufacturer = product.manufacturer,
-                sale_cost = product.sale_cost, wholesale_cost = product.wholesale_cost)
+    return inventory_system_pb2.Product(name = product.name,
+                                        id = product.id,
+                                        amount = product.amount,
+                                        description = product.description,
+                                        manufacturer = product.manufacturer,
+                                        sale_cost = product.sale_cost,
+                                        wholesale_cost = product.wholesale_cost)
 
 
 def init_order(order):
@@ -235,8 +264,12 @@ def init_order(order):
     for product in order.products:
         product_id = inventory_system_pb2.ProductIdentifier(name = product[0], id = product[1])
         product_amounts.append(inventory_system_pb2.ProductAmount(product_identifier = product_id, amount = product[2]))
-    return inventory_system_pb2.Order(id = order.id, destination = order.destination, date = order.date, products=product_amounts,
-            is_paid = order.is_paid, is_shipped = order.is_shipped)
+    return inventory_system_pb2.Order(id = order.id,
+                                      destination = order.destination,
+                                      date = order.date,
+                                      products=product_amounts,
+                                      is_paid = order.is_paid,
+                                      is_shipped = order.is_shipped)
 
 
 def retrieve_product(request):
