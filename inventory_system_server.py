@@ -6,6 +6,8 @@ from inventory_util import Inventory
 from concurrent import futures
 import grpc
 from inventory_system import InventorySystem
+from xmlrpc.server import SimpleXMLRPCServer
+import XMLRPC
 
 def main():
     try:
@@ -18,8 +20,12 @@ def main():
         inventory_system_pb2_grpc.add_InventorySystemServicer_to_server(InventorySystem(inventory), server)
         server.add_insecure_port('[::]:50051')
         server.start()
+        server_xml = server = SimpleXMLRPCServer(("localhost", 8000))
+        XMLRPC.start_xml(server_xml, inventory)
+
         server.wait_for_termination()
     except KeyboardInterrupt:
+        server_xml.shutdown()
         products = open("products.pickle", "wb")
         pickle.dump(inventory, products)
         products.close()
