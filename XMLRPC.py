@@ -95,17 +95,19 @@ def update_order_shipped(order_id, is_shipped):
 
 
 # Todo
-def get_order_summary(order_):
-    summary = "ID: " + str(order_.id_) + " "
-    for i in range(len(order_.amounts)):
-        summary += order_.products_name_or_id[i] + ": " + str(order_.amounts[i]) + " units. "
+def get_order_summary(id_):
+    order_ = get_order(id_)
+    summary = "ID: " + str(order_.id) + " "
+    for product in order_.products:
+        summary += product.name+ ": " + product.amount + " units. "
     return summary
 
 
 # TODO refine
-def get_product_summary(the_product):
+def get_product_summary(name, id):
+    the_product = get_product(name, id)
     return the_product.name + ", has " + str(
-        the_product.amount) + " units, manufacturer:" + the_product.manufacturer + ", ID:" + the_product.id_ + \
+        the_product.amount) + " units, manufacturer:" + the_product.manufacturer + ", ID:" + the_product.id + \
            ", description: " + the_product.description + \
            ", whole Sale and sale cost:" + str(the_product.whole_sale_cost) + " " + str(the_product.sale_cost)
 
@@ -162,9 +164,8 @@ def start_xml(server, inventory):
     server.register_function(increase_product_amount, "increase_product_amount")
     server.register_function(list_products, "list_products")
     server.register_function(list_products_by_manufacturer, "list_products_by_manufacturer")
-    server.register_function(lookup_order, "lookup_order")
-    server.register_function(lookup_product_by_id, "lookup_product_by_id")
-    server.register_function(lookup_product_by_name, "lookup_product_by_name")
+    server.register_function(get_order_summary, "get_order")
+    server.register_function(get_product_summary, "get_product")
     server.register_function(decrease_product_amount, "decrease_product_amount")
     server.register_function(list_unshipped, "list_unshipped")
     server.register_function(list_unpaid, "list_unpaid")
