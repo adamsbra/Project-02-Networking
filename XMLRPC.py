@@ -1,5 +1,3 @@
-from datetime import date
-
 import pickle
 import uuid
 import inventory_util as ui
@@ -17,7 +15,7 @@ def get_product(name, id_):
     return inventory_xml.get_product(name, id_)
 
 
-def add_order(products, destination, is_paid=False, is_shipped=False):
+def add_order(products, destination, date, is_paid=False, is_shipped=False):
     order = ui.Order(destination, date, products, is_paid, is_shipped)
     # returns order id otherwise returns -1
     order_id = inventory_xml.add_order(order)
@@ -94,22 +92,22 @@ def update_order_shipped(order_id, is_shipped):
     return success
 
 
-# Todo
 def get_order_summary(id_):
-    order_ = get_order(id_)
-    summary = "ID: " + str(order_.id) + " "
-    for product in order_.products:
-        summary += product.name+ ": " + product.amount + " units. "
-    return summary
+    the_order = get_order(id_)
+    if isinstance(the_order, ui.Order):
+        return [the_order.id, the_order.destination, the_order.date, the_order.is_shipped, the_order.is_paid,
+                the_order.products]
+    else:
+        return -1
 
 
-# TODO refine
-def get_product_summary(name, id):
-    the_product = get_product(name, id)
-    return the_product.name + ", has " + str(
-        the_product.amount) + " units, manufacturer:" + the_product.manufacturer + ", ID:" + the_product.id + \
-           ", description: " + the_product.description + \
-           ", whole Sale and sale cost:" + str(the_product.whole_sale_cost) + " " + str(the_product.sale_cost)
+def get_product_summary(name, id_):
+    the_product = get_product(name, id_)
+    if isinstance(the_product, ui.Product):
+        return [the_product.name, the_product.id, the_product.description, the_product.manufacturer, the_product.amount]
+
+    else:
+        return -1
 
 
 def list_products():
@@ -126,21 +124,22 @@ def list_orders():
     return orders
 
 
-
 def list_products_by_manufacturer(manufacturer):
     products_by_manufacturer = []
     for product in inventory_xml.products_by_id.values():
         if product.manufacturer == manufacturer:
             products_by_manufacturer.append(product)
-    return products_by_manufacturer
-
+    if products_by_manufacturer == []:
+        return -1
+    else:
+        return products_by_manufacturer
 
 
 def list_unshipped():
     unshipped_orders = []
     for order in inventory_xml.orders.values():
         if not order.is_shipped:
-            unshipped_orders.append(order)
+            unshipped_orders.append(order.id)
     return unshipped_orders
 
 
@@ -148,11 +147,12 @@ def list_unpaid():
     unpaid_orders = []
     for order in inventory_xml.orders.values():
         if not order.is_paid:
-            unpaid_orders.append(order)
+            unpaid_orders.append(order.id)
     return unpaid_orders
 
 
 def start_xml(server, inventory):
+
     global inventory_xml
     inventory_xml = inventory
     server.register_function(add_order, "add_order")
@@ -164,8 +164,17 @@ def start_xml(server, inventory):
     server.register_function(increase_product_amount, "increase_product_amount")
     server.register_function(list_products, "list_products")
     server.register_function(list_products_by_manufacturer, "list_products_by_manufacturer")
-    server.register_function(get_order_summary, "get_order")
-    server.register_function(get_product_summary, "get_product")
+    server.register_function(get_order_summary, "get_order_summary")
+    server.register_function(get_product_summary, "get_product_summary")
     server.register_function(decrease_product_amount, "decrease_product_amount")
     server.register_function(list_unshipped, "list_unshipped")
     server.register_function(list_unpaid, "list_unpaid")
+    server.register_function(add_product_to_order, "add_product_to_order")
+    server.register_function(remove_product_from_order, "remove_product_from_order")
+    server.register_function(update_order_destination, "update_order_destination")
+    server.register_function(update_order_date, "update_order_date")
+    server.register_function(update_order_paid, "update_order_paid")
+    server.register_function(update_order_shipped, "update_order_shipped")
+    server.register_function(list_unpaid, "list_unpaid")
+    server.register_function(list_unshipped, "list_unshipped")
+
