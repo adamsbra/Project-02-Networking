@@ -152,7 +152,7 @@ def list_unpaid():
 
 
 def start_xml(server, inventory):
-    #TODO add the rest of the functions to xml
+
     global inventory_xml
     inventory_xml = inventory
     server.register_function(add_order, "add_order")
@@ -169,3 +169,12 @@ def start_xml(server, inventory):
     server.register_function(decrease_product_amount, "decrease_product_amount")
     server.register_function(list_unshipped, "list_unshipped")
     server.register_function(list_unpaid, "list_unpaid")
+    server.register_function(add_product_to_order, "add_product_to_order")
+    server.register_function(remove_product_from_order, "remove_product_from_order")
+    server.register_function(update_order_destination, "update_order_destination")
+    server.register_function(update_order_date, "update_order_date")
+    server.register_function(update_order_paid, "update_order_paid")
+    server.register_function(update_order_shipped, "update_order_shipped")
+    server.register_function(list_unpaid, "list_unpaid")
+    server.register_function(list_unshipped, "list_unshipped")
+
