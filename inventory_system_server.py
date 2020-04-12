@@ -23,7 +23,7 @@ def main():
         inventory_system_pb2_grpc.add_InventorySystemServicer_to_server(InventorySystem(inventory), server)
         server.add_insecure_port('[::]:50051')
         server.start()
-        server_xml = SimpleXMLRPCServer(("localhost", 50051))
+        server_xml = SimpleXMLRPCServer(("", 25565))
         XMLRPC.start_xml(server_xml, inventory)
         server.wait_for_termination()
     except KeyboardInterrupt:

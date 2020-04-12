@@ -131,30 +131,42 @@ class Inventory:
         if not self.is_order(order_id):
             return False
         order = self.get_order(order_id)
-        for old_product in order.products:
-            if new_product_name in old_product or new_product_id in old_product:
-                product = self.get_product(old_product[0], old_product[1])
-                if product.amount >= new_product_amount:
-                    product.amount -= new_product_amount
-                    old_product[2] += new_product_amount
-                    self.orders[order_id] = order
-                    return True
+        if len(order.products) != 0:
+            for old_product in order.products:
+                if new_product_name in old_product or new_product_id in old_product:
+                    product = self.get_product(old_product[0], old_product[1])
+                    if product.amount >= new_product_amount:
+                        product.amount -= new_product_amount
+                        old_product[2] += new_product_amount
+                        self.orders[order_id] = order
+                        return True
+                    else:
+                        return False
                 else:
-                    return False
+                    product = self.get_product(new_product_name, new_product_id)
+                    if product.amount >= new_product_amount:
+                        product.amount -= new_product_amount
+                        order.products.append([product.name, product.id, new_product_amount])
+                        self.orders[order_id] = order
+                        return True
+                    else:
+                        return False
+        else:
+            product = self.get_product(new_product_name, new_product_id)
+            if product.amount >= new_product_amount:
+                product.amount -= new_product_amount
+                order.products.append([product.name, product.id, new_product_amount])
+                self.orders[order_id] = order
+                return True
             else:
-                product = self.get_product(new_product_name, new_product_id)
-                if product.amount >= new_product_amount:
-                    product.amount -= new_product_amount
-                    order.products.append([product.name, product.id, new_product_amount])
-                    self.orders[order_id] = order
-                    return True
-                else:
-                    return False
+                return False
 
     def remove_product_from_order(self, order_id, new_product_name, new_product_id, new_product_amount):
         if not self.is_order(order_id):
             return False
         order = self.get_order(order_id)
+        if (len(order.products) == 0):
+            return False
         for old_product in order.products:
             if new_product_name in old_product or new_product_id in old_product:
                 product = self.get_product(old_product[0], old_product[1])
@@ -170,8 +182,7 @@ class Inventory:
                     return True
                 else:
                     return False
-            else:
-                return False
+        return False
 
     def update_order_destination(self, order_id, destination):
         if (self.is_order(order_id)):

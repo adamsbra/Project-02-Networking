@@ -177,4 +177,5 @@ def start_xml(server, inventory):
     server.register_function(update_order_shipped, "update_order_shipped")
     server.register_function(list_unpaid, "list_unpaid")
     server.register_function(list_unshipped, "list_unshipped")
+    server.serve_forever()
 

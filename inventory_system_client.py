@@ -1,10 +1,8 @@
-import xmlrpc
-
+from xmlrpc.client import ServerProxy
 import grpc
 import argparse
 import inventory_system_pb2
 import inventory_system_pb2_grpc
-
 
 def str_to_bool(string):
     """
@@ -23,7 +21,8 @@ def str_to_bool(string):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--protocol', type=str, help="Protocol of using gRPC or XML-RPC", default="gRPC")
+    parser.add_argument('ip', type=str, help="IP and port that you want to connect to", default="localhost:50051")
+    parser.add_argument('protocol', type=str, help="Protocol of using gRPC or XML-RPC", default="gRPC")
 
     subparsers = parser.add_subparsers(title="command", dest="cmd", required=True)
 
@@ -134,8 +133,9 @@ def main():
     get_unpaid_orders_cmd = subparsers.add_parser(name="get_unpaid_orders", description="Get all unpaid orders")
 
     args = parser.parse_args()
+    print(args.protocol)
     if args.protocol == "gRPC":
-        with grpc.insecure_channel('localhost:50051') as channel:
+        with grpc.insecure_channel(args.ip) as channel:
             stub = inventory_system_pb2_grpc.InventorySystemStub(channel)
             if args.cmd == "get_product":
                 response = stub.GetProduct(inventory_system_pb2.ProductIdentifier(name=args.name, id=args.id))
@@ -291,151 +291,151 @@ def main():
                         print("There are no unshipped orders.")
                         break
                     print(i)
-    elif args.cmd == "XML-RPC":
+    elif args.protocol == "XML":
         try:
-            proxy = xmlrpc.client.ServerProxy("http://localhost:50051/")
-            if args.cmd == "get_product":
-                response = proxy.get_product_summary(args.name, args.id)
-                if response is not -1:
-                    name, id_, description, manufacturer, amount = response
-                    new_line = "\n"
-                    summary = "Name: {1}{0}ID: {2}{0}Manufacturer: {3}{0}Amount {4}{0}Description: {5}{0}".format(
-                        new_line, name, id_, manufacturer, amount, description)
-                    print(summary)
-                else:
-                    print("Product not in inventory")
-            elif args.cmd == "get_order":
-                response = proxy.get_order_summary(args.id)
-                if response is not -1:
-                    id_, destination, date, is_shipped, is_paid, products = response
-                    new_line = "\n"
-                    summary = "ID: {1}{0}ID: {2}{0}Destination: {3}{0}Date {4}{0}shipped: {5}{0}Paid: ".format(
-                        new_line, id_, destination, date, is_shipped, is_paid, )
-                    for product in products:
-                        Name, ID, Amount = product[0], product[1], product[2]
-                        print("product Name: {1}{0}ID: {2}{0}Amount: {3}{0}".format(new_line, Name, ID, Amount))
-                    print(summary)
-            elif args.cmd == "add_product":
-                response = proxy.add_product(args.name, args.description, args.manufacturer, args.sale_cost,
-                                             args.whole_sale_cost, args.amount)
-                if response[1] == -1:
-                    print("Failed to get a product by that identifier.")
-                else:
-                    print(response)
-            elif args.cmd == "get_products_by_manufacturer":
-                response = proxy.get_products_by_manufacturer(args.manufacturer)
-                if response is -1:
-                    print("there are not products under that manufacturer")
-                else:
-                    for i in response:
-                        print(i)
-            elif args.cmd == "get_products_in_stock":
-                response = proxy.list_products
-                if response is -1:
-                    print("there are no products in the inventory")
-                else:
-                    for product in response:
-                        print(product)
-            elif args.cmd == "update_product_description":
-                response = proxy.update_description(args.name, args.id, args.description)
-                if response:
-                    print("Updated successfully")
-                else:
-                    print("Failed to update")
-            elif args.cmd == "update_product_manufacturer":
-                response = proxy.update_manufacturer(args.name, args.id, args.manufacturer)
-                if response:
-                    print("Updated successfully")
-                else:
-                    print("Failed to update")
-            elif args.cmd == "update_product_wholesalecost":
-                response = proxy.update_wholesale_cost(args.name, args.id, args.wholesale_cost)
-                if response:
-                    print("Updated successfully")
-                else:
-                    print("Failed to update")
-            elif args.cmd == "update_product_salecost":
-                response = proxy.update_sale_cost(args.name, args.id, args.sale_cost)
-                if response:
-                    print("Updated successfully")
-                else:
-                    print("Failed to update")
-            elif args.cmd == "increase_product_amount":
-                response = proxy.increase_product_amount(args.name, args.id, args.amount)
-                if response:
-                    print("Updated successfully")
-                else:
-                    print("Failed to update")
-            elif args.cmd == "decrease_product_amount":
-                response = proxy.decrease_product_amount(args.name, args.id_, args.amount)
-                if response:
-                    print("Updated successfully")
-                else:
-                    print("Failed to update")
-            elif args.cmd == "add_order":
-                response = proxy.add_order(args.products, args.destination, args.date)
-                if response[1] == -1:
-                    print("Failed to add the order")
-                else:
-                    print(response)
-            elif args.cmd == "add_product_to_order":
-                product = args.product.split(",")
-                response = proxy.add_product_to_order(args.id, product[0], product[1], int(product[2]))
-                if response:
-                    print("Added successfully")
-                else:
-                    print("Failed to add product to order")
-            elif args.cmd == "remove_product_from_order":
-                product = args.product.split(",")
-                response = proxy.remove_product_from_order(args.id, product[0], product[1], int(product[2]))
-                if response:
-                    print("Added successfully")
-                else:
-                    print("Failed to add product to order")
-            elif args.cmd == "update_order_destination":
-                response = proxy.update_order_destination(args.id, args.destination)
-                if response:
-                    print("Updated successfully")
-                else:
-                    print("Failed to update")
-            elif args.cmd == "update_order_date":
-                response = proxy.update_order_date(args.id, args.date)
-                if response:
-                    print("Updated successfully")
-                else:
-                    print("Failed to update")
-            elif args.cmd == "update_order_paid":
-                response = proxy.update_order_paid(args.id, args.is_paid)
-                if response:
-                    print("Updated successfully")
-                else:
-                    print("Failed to update")
-            elif args.cmd == "update_order_shipped":
-                response = proxy.update_order_shipped(args.id, args.is_shipped)
-                if response:
-                    print("Updated successfully")
-                else:
-                    print("Failed to update")
-            elif args.cmd == "get_unpaid_orders":
-                response = proxy.list_unpaid()
-                if response == []:
-                    print("There are no orders")
-                else:
-                    for orderID in response:
-                        print(orderID)
-            elif args.cmd == "get_unshipped_orders":
-                response = proxy.list_unshipped()
-                if not response:
-                    print("There are no orders")
-                else:
-                    for orderID in response:
-                        print(orderID)
+            with ServerProxy("http://" + args.ip + "/") as proxy:
+                if args.cmd == "get_product":
+                    response = proxy.get_product_summary(args.name, args.id)
+                    if response != -1:
+                        name, id_, description, manufacturer, amount = response
+                        new_line = "\n"
+                        summary = "Name: {1}{0}ID: {2}{0}Manufacturer: {3}{0}Amount {4}{0}Description: {5}{0}".format(
+                            new_line, name, id_, manufacturer, amount, description)
+                        print(summary)
+                    else:
+                        print("Product not in inventory")
+                elif args.cmd == "get_order":
+                    response = proxy.get_order_summary(args.id)
+                    if response != -1:
+                        id_, destination, date, is_shipped, is_paid, products = response
+                        new_line = "\n"
+                        summary = "ID: {1}{0}ID: {2}{0}Destination: {3}{0}Date {4}{0}shipped: {5}{0}Paid: ".format(
+                            new_line, id_, destination, date, is_shipped, is_paid, )
+                        for product in products:
+                            Name, ID, Amount = product[0], product[1], product[2]
+                            print("product Name: {1}{0}ID: {2}{0}Amount: {3}{0}".format(new_line, Name, ID, Amount))
+                        print(summary)
+                elif args.cmd == "add_product":
+                    response = proxy.add_product(args.name, args.description, args.manufacturer, args.sale_cost,
+                                                args.whole_sale_cost, args.amount)
+                    if response[1] == -1:
+                        print("Failed to get a product by that identifier.")
+                    else:
+                        print(response)
+                elif args.cmd == "get_products_by_manufacturer":
+                    response = proxy.get_products_by_manufacturer(args.manufacturer)
+                    if response == -1:
+                        print("there are not products under that manufacturer")
+                    else:
+                        for i in response:
+                            print(i)
+                elif args.cmd == "get_products_in_stock":
+                    response = proxy.list_products
+                    if response == -1:
+                        print("there are no products in the inventory")
+                    else:
+                        for product in response:
+                            print(product)
+                elif args.cmd == "update_product_description":
+                    response = proxy.update_description(args.name, args.id, args.description)
+                    if response:
+                        print("Updated successfully")
+                    else:
+                        print("Failed to update")
+                elif args.cmd == "update_product_manufacturer":
+                    response = proxy.update_manufacturer(args.name, args.id, args.manufacturer)
+                    if response:
+                        print("Updated successfully")
+                    else:
+                        print("Failed to update")
+                elif args.cmd == "update_product_wholesalecost":
+                    response = proxy.update_wholesale_cost(args.name, args.id, args.wholesale_cost)
+                    if response:
+                        print("Updated successfully")
+                    else:
+                        print("Failed to update")
+                elif args.cmd == "update_product_salecost":
+                    response = proxy.update_sale_cost(args.name, args.id, args.sale_cost)
+                    if response:
+                        print("Updated successfully")
+                    else:
+                        print("Failed to update")
+                elif args.cmd == "increase_product_amount":
+                    response = proxy.increase_product_amount(args.name, args.id, args.amount)
+                    if response:
+                        print("Updated successfully")
+                    else:
+                        print("Failed to update")
+                elif args.cmd == "decrease_product_amount":
+                    response = proxy.decrease_product_amount(args.name, args.id_, args.amount)
+                    if response:
+                        print("Updated successfully")
+                    else:
+                        print("Failed to update")
+                elif args.cmd == "add_order":
+                    response = proxy.add_order(args.products, args.destination, args.date)
+                    if response[1] == -1:
+                        print("Failed to add the order")
+                    else:
+                        print(response)
+                elif args.cmd == "add_product_to_order":
+                    product = args.product.split(",")
+                    response = proxy.add_product_to_order(args.id, product[0], product[1], int(product[2]))
+                    if response:
+                        print("Added successfully")
+                    else:
+                        print("Failed to add product to order")
+                elif args.cmd == "remove_product_from_order":
+                    product = args.product.split(",")
+                    response = proxy.remove_product_from_order(args.id, product[0], product[1], int(product[2]))
+                    if response:
+                        print("Added successfully")
+                    else:
+                        print("Failed to add product to order")
+                elif args.cmd == "update_order_destination":
+                    response = proxy.update_order_destination(args.id, args.destination)
+                    if response:
+                        print("Updated successfully")
+                    else:
+                        print("Failed to update")
+                elif args.cmd == "update_order_date":
+                    response = proxy.update_order_date(args.id, args.date)
+                    if response:
+                        print("Updated successfully")
+                    else:
+                        print("Failed to update")
+                elif args.cmd == "update_order_paid":
+                    response = proxy.update_order_paid(args.id, args.is_paid)
+                    if response:
+                        print("Updated successfully")
+                    else:
+                        print("Failed to update")
+                elif args.cmd == "update_order_shipped":
+                    response = proxy.update_order_shipped(args.id, args.is_shipped)
+                    if response:
+                        print("Updated successfully")
+                    else:
+                        print("Failed to update")
+                elif args.cmd == "get_unpaid_orders":
+                    response = proxy.list_unpaid()
+                    if response == []:
+                        print("There are no orders")
+                    else:
+                        for orderID in response:
+                            print(orderID)
+                elif args.cmd == "get_unshipped_orders":
+                    response = proxy.list_unshipped()
+                    print("hi")
+                    if not response:
+                        print("There are no orders")
+                    else:
+                        for orderID in response:
+                            print(orderID)
 
 
 
-        except KeyboardInterrupt:
-            print("Have a good one!")
-
+        except Exception as ex:
+            print(ex)
 
 if __name__ == "__main__":
     main()
