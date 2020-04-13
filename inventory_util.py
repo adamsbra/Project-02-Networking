@@ -116,9 +116,6 @@ class Inventory:
             return "-1"
 
 
-
-
-
     def is_order(self, id_):
         if id_ in self.orders:
             return True
@@ -189,7 +186,7 @@ class Inventory:
         return False
 
     def update_order_destination(self, order_id, destination):
-        if (self.is_order(order_id)):
+        if self.is_order(order_id):
             order = self.get_order(order_id)
             order.destination = destination
             return True
@@ -197,7 +194,7 @@ class Inventory:
             return False
 
     def update_order_date(self, order_id, date):
-        if (self.is_order(order_id)):
+        if self.is_order(order_id):
             order = self.get_order(order_id)
             order.date = date
             return True

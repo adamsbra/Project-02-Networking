@@ -19,23 +19,9 @@ def get_product(name, id_):
 
 def add_order(products, destination, date, is_paid=False, is_shipped=False):
     """ function to call the inventory add order function"""
-    order = ui.Order(destination, date, products, is_paid, is_shipped)
-    # returns order id otherwise returns -1
-    valid_products = []
-    if not inventory_xml.is_order(order.id):
-        for order_product in order.products:
-            name = order_product[1]
-            id_ = order_product[0]
-            if inventory_xml.is_product(name, id_):
-                product = inventory_xml.get_product(name, id_)
-                if product.amount >= order_product.amount:
-                    valid_products.append([product.name, product.id, order_product.amount])
-                    product.amount -= order_product.amount
-        order.products = valid_products
-        inventory_xml.orders[order.id] = order
-        return order.id
-    else:
-        return "-1"
+    new_order = ui.Order(destination, date, products, is_paid, is_shipped)
+    response = inventory_xml.add_order(new_order)
+    return response
 
 
 def add_product(name, description, manufacturer, sale_cost, whole_sale_cost, amount):
