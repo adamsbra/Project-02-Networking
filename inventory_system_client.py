@@ -309,12 +309,12 @@ def main():
                     if response != -1:
                         id_, destination, date, is_shipped, is_paid, products = response
                         new_line = "\n"
-                        summary = "ID: {1}{0}ID: {2}{0}Destination: {3}{0}Date {4}{0}shipped: {5}{0}Paid: ".format(
-                            new_line, id_, destination, date, is_shipped, is_paid, )
+                        summary = "ID: {1}{0}Destination: {2}{0}Date: {3}{0}shipped: {4}{0}Paid: ".format(
+                            new_line, id_, destination, date, is_shipped, is_paid)
+                        print(summary)
                         for product in products:
                             Name, ID, Amount = product[0], product[1], product[2]
                             print("product Name: {1}{0}ID: {2}{0}Amount: {3}{0}".format(new_line, Name, ID, Amount))
-                        print(summary)
                 elif args.cmd == "add_product":
                     response = proxy.add_product(args.name, args.description, args.manufacturer, args.sale_cost,
                                                 args.whole_sale_cost, args.amount)
@@ -323,14 +323,14 @@ def main():
                     else:
                         print(response)
                 elif args.cmd == "get_products_by_manufacturer":
-                    response = proxy.get_products_by_manufacturer(args.manufacturer)
+                    response = proxy.list_products_by_manufacturer(args.manufacturer)
                     if response == -1:
                         print("there are not products under that manufacturer")
                     else:
                         for i in response:
                             print(i)
                 elif args.cmd == "get_products_in_stock":
-                    response = proxy.list_products
+                    response = proxy.list_products()
                     if response == -1:
                         print("there are no products in the inventory")
                     else:
