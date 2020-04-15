@@ -14,9 +14,11 @@ def run_get_product_grpc(stub):
     for i in range(0, AMOUNT_TO_TEST):
         stub.GetProduct(inventory_system_pb2.ProductIdentifier(name="Product" + str(i), id="-1"))
 def run_get_product_manufacturer_grpc(stub):
-    stub.GetProductsByManufacturer(inventory_system_pb2.Manufacturer(manufacturer="Google"))
+    for i in range(0, AMOUNT_TO_TEST):
+        stub.GetProductsByManufacturer(inventory_system_pb2.Manufacturer(manufacturer="Google"))
 def run_get_product_stock_grpc(stub):
-    stub.GetProductsInStock(inventory_system_pb2.Empty())
+    for i in range(0, AMOUNT_TO_TEST):
+        response = stub.GetProductsInStock(inventory_system_pb2.Empty())
 def run_update_description_grpc(stub):
     for i in range(0, AMOUNT_TO_TEST):
         stub.UpdateProductDescription(inventory_system_pb2.ProductDescription(
@@ -88,9 +90,11 @@ def run_update_order_shipped_grpc(stub):
         stub.UpdateOrderShipped(
                     inventory_system_pb2.OrderShipped(id="f76e7160-bdcd-415e-bc95-8625f698da6d", is_shipped = True))
 def run_all_unshipped_grpc(stub):
-    stub.GetUnshippedOrders(inventory_system_pb2.Empty())
+    for i in range(0, AMOUNT_TO_TEST):
+        stub.GetUnshippedOrders(inventory_system_pb2.Empty())
 def run_all_unpaid_grpc(stub):
-    stub.GetUnpaidOrders(inventory_system_pb2.Empty())
+    for i in range(0, AMOUNT_TO_TEST):
+        stub.GetUnpaidOrders(inventory_system_pb2.Empty())
 
 def main():
     with grpc.insecure_channel("34.226.207.102:25555") as channel:
