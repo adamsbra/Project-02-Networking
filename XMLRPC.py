@@ -80,7 +80,7 @@ def add_product_to_order(order_id, new_product_name, new_product_id, new_product
 
 def remove_product_from_order(order_id, new_product_name, new_product_id, new_product_amount):
     """"wrapper function to call the inventory remove product from order function"""
-    success = remove_product_from_order(order_id, new_product_name, new_product_id, new_product_amount)
+    success = inventory_xml.remove_product_from_order(order_id, new_product_name, new_product_id, new_product_amount)
     return success
 
 
