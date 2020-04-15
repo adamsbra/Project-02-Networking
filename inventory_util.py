@@ -155,6 +155,7 @@ class Inventory:
         else:
             return "-1"
 
+
     def is_order(self, id_):
         '''
         Checks to see if an order exists in inventory,
@@ -250,7 +251,7 @@ class Inventory:
         Updates the destination of an order given a destination and an order id.
         Fails if the order does not exist.
         '''
-        if (self.is_order(order_id)):
+        if self.is_order(order_id):
             order = self.get_order(order_id)
             order.destination = destination
             return True
@@ -262,7 +263,7 @@ class Inventory:
         Updates the date of an order given a date and an order id.
         Fails if the order does not exist.
         '''
-        if (self.is_order(order_id)):
+        if self.is_order(order_id):
             order = self.get_order(order_id)
             order.date = date
             return True

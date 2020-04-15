@@ -96,7 +96,98 @@ def run_all_unpaid_grpc(stub):
     for i in range(0, AMOUNT_TO_TEST):
         stub.GetUnpaidOrders(inventory_system_pb2.Empty())
 
+def run_add_product_XML(proxy):
+    """Function to test time on the add product functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.add_product("productXML"+str(i), "another Product", "manu", 20,
+                          15, 200)
+def run_get_product_XML(proxy):
+    """Function to test time on the get product functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.get_product_summary("productXML"+str(i), "-1")
+def run_get_product_manufacturer_XML(proxy):
+    """function to test time on the get products by manufacturer functionality of the inventory"""
+    proxy.list_products_by_manufacturer("manu")
+def run_get_product_stock_XML(proxy):
+    """Function to test time on the list products of the inventory"""
+    proxy.list_products()
+def run_update_description_XML(proxy):
+    """Function to test time on the update product description functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.update_description("productXML"+str(i), "-1", "a new description")
+def run_update_manufacturer_XML(proxy):
+    """Function to test time on the update manufacturer functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.update_manufacturer("productXML"+str(i), "-1", "Manu2")
+def run_update_wholesale_XML(proxy):
+    """Function to test time on the update whole sale functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.update_wholesale_cost("productXML"+str(i), "-1", 30)
+def run_update_sale_XML(proxy):
+    """Function to test time on the update sale cost functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.update_sale_cost("productXML"+str(i), "-1", 20)
+def run_increase_XML(proxy):
+    """Function to test time on the increase product amount functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.increase_product_amount("productXML"+str(i), "-1", 40)
+def run_decrease_XML(proxy):
+    """Function to test time on the decrease product amount functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.decrease_product_amount("productXML"+str(i), "-1", 5)
+def run_add_order_XML(proxy):
+    """Function to test time on the add_order functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.add_order([["-1", "productXML"+str(i), 40]], "somewhere", "Today")
+def run_get_order_XML(proxy):
+    """Function to test time on the get order functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.get_order_summary("6eab8c15-3d12-43ed-8bc8-63c36718c105")
+def add_product_to_order_XML(proxy):
+    """Function to test time on the add product to order functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.add_product_to_order("6eab8c15-3d12-43ed-8bc8-63c36718c105", "-1", "productXML"+str(i), 30)
+def run_remove_product_from_order_XML(proxy):
+    """Function to test time on the remove product from order functionality"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.remove_product_from_order("6eab8c15-3d12-43ed-8bc8-63c36718c105", "-1", "productXML" + str(i), 5)
+def run_update_order_destination_XML(proxy):
+    """Function to test time on the update order destination functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.update_order_destination("6eab8c15-3d12-43ed-8bc8-63c36718c105", "destination")
+def run_update_order_date_XML(proxy):
+    """Function to test time on the update order date functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.update_order_date("6eab8c15-3d12-43ed-8bc8-63c36718c105", "a new date")
+def run_update_order_paid_XML(proxy):
+    """Function to test time on the update order is paid functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.update_order_paid("6eab8c15-3d12-43ed-8bc8-63c36718c105", "True")
+def run_update_order_shipped_XML(proxy):
+    """Function to test time on the update order is paid functionality of the inventory"""
+    for i in range(0, AMOUNT_TO_TEST):
+        proxy.update_order_shipped("6eab8c15-3d12-43ed-8bc8-63c36718c105", "True")
+def run_all_unshipped_XML(proxy):
+    proxy.list_unpaid()
+def run_all_unpaid_XML(proxy):
+    proxy.list_unshipped()
+
+
+list_of_functions = ["run_add_product_XML(proxy)", "run_get_product_XML(proxy)",
+                     "run_get_product_manufacturer_XML(proxy)",
+                     "run_get_product_stock_XML(proxy)", "run_update_description_XML(proxy)",
+                     "run_update_manufacturer_XML(proxy)", "run_update_wholesale_XML(proxy)",
+                     "run_update_sale_XML(proxy)", "run_increase_XML(proxy)", "run_decrease_XML(proxy)",
+                     "run_get_order_XML(proxy)",
+                     "run_update_order_destination_XML(proxy)",
+                     "run_update_order_date_XML(proxy)", "run_update_order_paid_XML(proxy)",
+                     "run_update_order_shipped_XML(proxy)", "run_all_unshipped_XML(proxy)", "run_all_unpaid_XML(proxy)",
+                     "run_add_order_XML(proxy)", "add_product_to_order_XML(proxy)",
+                     "run_remove_product_from_order_XML(proxy)"]
+
 def main():
+
+
     with grpc.insecure_channel("34.226.207.102:25555") as channel:
         total = 0
         stub = inventory_system_pb2_grpc.InventorySystemStub(channel)
@@ -200,6 +291,19 @@ def main():
         end = time.monotonic()
         print("All unpaid: ", end - start)
         print("Total time: ", total)
+
+
+    total_xml = 0
+    # Todo Need to review the add order, add product to order and remove product from order functions
+    with ServerProxy("http://34.226.207.102:25565/") as proxy:
+        for i in list_of_functions:
+            start = time.monotonic()
+            eval(i)
+            end = time.monotonic()
+            print(i+": ", end - start)
+            total_xml += (end - start)
+        print(total_xml)
+
 
 if __name__ == "__main__":
     main()
