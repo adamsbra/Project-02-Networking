@@ -186,6 +186,8 @@ class Inventory:
         '''
         if not self.is_order(order_id):
             return False
+        if not self.is_product(new_product_name, new_product_id):
+            return False
         order = self.get_order(order_id)
         if len(order.products) != 0:
             for old_product in order.products:
@@ -226,6 +228,8 @@ class Inventory:
         we wish to remove is greater than the amount in order.
         '''
         if not self.is_order(order_id):
+            return False
+        if not self.is_product(new_product_name, new_product_id):
             return False
         order = self.get_order(order_id)
         if (len(order.products) == 0):
