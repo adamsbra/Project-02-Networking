@@ -142,13 +142,14 @@ class Inventory:
         valid_products = []
         if not self.is_order(order.id):
             for order_product in order.products:
-                name = order_product.product_identifier.name
-                id_ = order_product.product_identifier.id
+                name = order_product[0]
+                id_ = order_product[1]
+                amount = order_product[2]
                 if self.is_product(name, id_):
                     product = self.get_product(name, id_)
-                    if product.amount >= order_product.amount:
-                        valid_products.append([product.name, product.id, order_product.amount])
-                        product.amount -= order_product.amount
+                    if product.amount >= amount:
+                        valid_products.append([product.name, product.id, amount])
+                        product.amount -= amount
             order.products = valid_products
             self.orders[order.id] = order
             return order.id
@@ -377,7 +378,9 @@ def retrieve_order(request):
     destination = request.destination
     date = request.date
     # products is a repeated struct
-    products = request.products
+    products = []
+    for i in request.products:
+        products.append([i.product_identifier.name, i.product_identifier.id, i.amount])
     is_paid = request.is_paid
     is_shipped = request.is_shipped
     return Order(destination, date, products, is_paid, is_shipped)
