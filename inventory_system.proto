@@ -1,29 +1,98 @@
 syntax = "proto3";
 
 service InventorySystem{
+
+    // Get a single product given a product identifier from the database,
+    // returns the product on success, returns a null product on failure.
     rpc GetProduct (ProductIdentifier) returns (Product){}
+
+    // Adds a single product given a product object to the database,
+    // returns a product identifier on success, returns a null identifier on failure.
     rpc AddProduct (Product) returns (ProductIdentifier) {}
+
+    // Get all products given a specific manufacturer, returns a stream of products.
     rpc GetProductsByManufacturer (Manufacturer) returns (stream Product){}
+
+    // Get all products currently in stock, returns a stream of products.
     rpc GetProductsInStock (Empty) returns (stream Product) {}
+
+    // Decreases the amount of a product given the integer for amount and
+    // the ProductIdentifier in ProductAmount.
+    // Returns false if the product is not found or the amount drops the quantity of a
+    // product below 0.
     rpc DecreaseProductAmount (ProductAmount) returns (Success) {}
+
+    // Increases the amount of a product given the integer or amount and
+    // the ProductIdentifier in ProductAmount.
+    // Returns false if the product is not found.
     rpc IncreaseProductAmount (ProductAmount) returns (Success) {}
+
+    // Updates the product manufacturer given a string for manufacuter and
+    // the ProductIdentifier in ProductManufacturer.
+    // Returns false if the product is not found.
     rpc UpdateProductManufacturer (ProductManufacturer) returns (Success) {}
+
+    // Updates the product description given a string for description and
+    // the ProductIdentifier in ProductDescription.
+    // Returns false if the product is not found.
     rpc UpdateProductDescription (ProductDescription) returns (Success) {}
+
+    // Updates the sale cost of a product given a double for sale cost and
+    // the ProductIdentifier in ProductSaleCost
+    // Returns false if the product is not found.
     rpc UpdateProductSaleCost (ProductSaleCost) returns (Success) {}
+
+    // Updates the wholesale cost of a product given a double for whole sale cost and
+    // the ProductIdentifier in ProductWholesaleCost.
+    // Returns false if the product is not found.
     rpc UpdateProductWholesaleCost (ProductWholesaleCost) returns (Success) {}
+
+    // Gets an Order object from the database given an OrderID. Returns
+    // a null order if the OrderID cannot be found in the database.
     rpc GetOrder (OrderID) returns (Order) {}
+
+    // Adds an Order object to the database and returns the order's id on success.
+    // Returns a null order identifier on failure.
     rpc AddOrder (Order) returns (OrderID) {}
+
+    // Adds a product to the order, given a ProductAmount message and an OrderID.
+    // Adds a single product to the order, fails if there is not enough of a product in stock
+    // or if the order does not exist.
     rpc AddProductToOrder (OrderProduct) returns (Success) {}
+
+    // Removes a product from an order, given a ProductAmount message and an OrderID.
+    // If the amount is equal to the amount we have in the order, the product is simply
+    // removed from the order. Fails if the product is not apart of an order, or if the
+    // amount we wish to remove is greater than what is present in the order.
     rpc RemoveProductFromOrder (OrderProduct) returns (Success) {}
+
+    // Updates the destination of an order given a string destination and an order id in
+    // OrderDestination. Returns false if the order is not found.
     rpc UpdateOrderDestination (OrderDestination) returns (Success) {}
+
+    // Updates the date of an order given a string date and an order id in
+    // OrderDate. Returns false if the order is not found.
     rpc UpdateOrderDate (OrderDate) returns (Success) {}
+
+    // Updates the is_paid status of an order given a boolean is_paid and an order id in
+    // OrderPaid. Returns false if the order is not found.
     rpc UpdateOrderPaid (OrderPaid) returns (Success) {}
+
+    // Updates the is_shipped status of an order given a boolean is_shipped and an order id in
+    // OrderShipped. Retursn false if the order is not found.
     rpc UpdateOrderShipped (OrderShipped) returns (Success) {}
+
+    // Gets a list of all unshipped orders and returns a stream of
+    // Order messages.
     rpc GetUnshippedOrders (Empty) returns (stream Order) {}
+
+    // Gets a list of all unpaid orders and returns a stream of
+    // Order messages.
     rpc GetUnpaidOrders (Empty) returns (stream Order) {}
 }
 
 message Product{
+    // Represents a product in the database
     string name = 1;
     string id = 2;
     int64 amount = 3;
@@ -34,6 +103,7 @@ message Product{
 }
 
 message Order {
+    // Represents an order in the database.
     string id = 1;
     string destination = 2;
     string date = 3;
@@ -43,71 +113,98 @@ message Order {
 }
 
 message OrderID{
+    // Represents an OrderID.
     string id = 1;
 }
 
 message OrderDestination {
+    // Represents an order's destination, which includes ID
+    // so we can access a specific order.
     string id = 1;
     string destination = 2;
 }
 
 message OrderDate {
+    // Represents an order's date, which includes ID
+    // so we can access a specific order.
     string id = 1;
     string date = 2;
 }
 
 message OrderPaid{
+    // Represents an order's paid status, which includes ID
+    // so we can access a specific order.
     string id = 1;
     bool is_paid = 2;
 }
 
 message OrderShipped {
+    // Represents an order's shipped status, which includes ID
+    // so we can access a specific order.
     string id = 1;
     bool is_shipped = 2;
 }
 
 message Success {
+    //Represents the success of an operation.
     bool success = 1;
 }
 
 message ProductIdentifier {
+    // Represents a product identifier, comprised of
+    // name and ID so we can access by either one.
     string name = 1;
     string id = 2;
 }
 
 message ProductAmount {
+    // Represents the amount of a product, which includes a product identiftier
+    // so we can access a specific product.
     ProductIdentifier product_identifier = 1;
     int64 amount = 2;
 }
 
 message ProductDescription {
+    // Represents the description of a product, which includes a product identiftier
+    // so we can access a specific product.
     ProductIdentifier product_identifier = 1;
     string description = 2;
 }
 
 message ProductManufacturer {
+    // Represents the manufacturer of a product, which includes a product identiftier
+    // so we can access a specific product.
     ProductIdentifier product_identifier = 1;
     string manufacturer = 2;
 }
 
 message ProductSaleCost {
+    // Represents the sale cost of a product, which includes a product identiftier
+    // so we can access a specific product.
     ProductIdentifier product_identifier = 1;
     double sale_cost = 2;
 }
 
 message ProductWholesaleCost {
+    // Represents the wholesale cost of a product, which includes a product identiftier
+    // so we can access a specific product.
     ProductIdentifier product_identifier = 1;
     double wholesale_cost = 2;
 }
 
  message OrderProduct {
-     string id = 1;
-     ProductAmount product_amount = 2;
+    // Represents the a product to be added to or removed from an order
+    // which includes a ProductAmount and the ID of the order.
+    string id = 1;
+    ProductAmount product_amount = 2;
  }
 
 message Manufacturer {
+    // Represents the manufacturer of a product, but without the ID
+    // since we use this to get all products by a specific manufacturer.
     string manufacturer = 1;
 }
 
 message Empty {
+    // Empty message so that we can pass nothing to a service.
 }
